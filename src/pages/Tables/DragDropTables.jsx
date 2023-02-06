@@ -76,7 +76,7 @@ const DragDropTables = () => {
     };
 
     //meta title
-    document.title = "Drag & Drop Tables | Skote - Vite React Admin & Dashboard Template";
+    document.title = "Drag & Drop Tables | Wireless + - Vite React Admin & Dashboard Template";
 
     return (
         <React.Fragment>

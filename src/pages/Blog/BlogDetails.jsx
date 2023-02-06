@@ -20,7 +20,7 @@ import avtar1 from "../../assets/images/users/avatar-2.jpg"
 
 const BlogDetails = () => {
     //meta title
-    document.title="Blog Details | Skote - Vite React Admin & Dashboard Template";
+    document.title="Blog Details | Wireless + - Vite React Admin & Dashboard Template";
   return (
     <React.Fragment>
       <div className="page-content">

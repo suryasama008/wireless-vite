@@ -16,7 +16,7 @@ import Breadcrumbs from "../../components/Common/Breadcrumb"
 const MapsVector = () => {
 
   //meta title
-  document.title = "Vector Maps | Skote - Vite React Admin & Dashboard Template";
+  document.title = "Vector Maps | Wireless + - Vite React Admin & Dashboard Template";
 
   return (
     <React.Fragment>

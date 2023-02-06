@@ -19,7 +19,7 @@ import Breadcrumbs from "../../components/Common/Breadcrumb";
 const UiModal = () => {
 
   //meta title
-  document.title = "Models | Skote - Vite React Admin & Dashboard Template";
+  document.title = "Models | Wireless + - Vite React Admin & Dashboard Template";
 
   const [modal_standard, setmodal_standard] = useState(false);
   const [modal_large, setmodal_large] = useState(false);

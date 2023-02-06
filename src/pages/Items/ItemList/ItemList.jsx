@@ -9,7 +9,8 @@ import Breadcrumbs from '../../../components/Common/Breadcrumb'
 import DeleteModal from '../../../components/Common/DeleteModal'
 import { useMemo } from 'react'
 import { items } from '../../../common/data'
-
+import EcommerceOrdersModal from './EcommerceOrdersModal'
+import OffCanvas from '../../Dashboard-saas/OffCanvas'
 import {
   getItems as onGetItems,
   deleteItem as onDeleteItem,
@@ -27,6 +28,7 @@ import {
   Status,
   Condition,
   Model,
+  UpdatedAt
 } from './ItemCol'
 import { useSelector, useDispatch } from 'react-redux'
 import {
@@ -47,12 +49,52 @@ import {
   DropdownMenu,
   DropdownItem,
 } from 'reactstrap'
+import Switch from 'react-switch'
+const Offsymbol = () => {
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100%",
+        fontSize: 12,
+        color: "#fff",
+        paddingRight: 2,
+      }}
+    >
+      Sold
+    </div>
+  );
+};
+
+const OnSymbol = () => {
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100%",
+        fontSize: 12,
+        color: "#fff",
+        paddingRight: 2,
+      }}
+    >
+      IS
+    </div>
+  );
+};
 const ItemList = () => {
   document.title = 'Item List'
   const [modal, setModal] = useState(false)
+  const [modal1, setModal1] = useState(false)
   const [isEdit, setIsEdit] = useState(false)
   const [itemList, setItemList] = useState([])
   const [item, setItem] = useState(null)
+  const [switch1, setSwitch1] = useState(true)
+   const [isRight, setIsRight] = useState(false)
+  const store = "EMTC"
 
   const validation = useFormik({
         // enableReinitialize : use this flag when initial values needs to be changed
@@ -60,6 +102,7 @@ const ItemList = () => {
     initialValues: {
       id: (item && item.id) || '',
       store: (item && item.store) || '',
+      category: (item && item.category) || '',
       brand: (item && item.brand) || '',
       color: (item && item.color) || '',
       model: (item && item.model) || '',
@@ -88,6 +131,7 @@ const ItemList = () => {
           id: item.id,
           store: values.store,
           brand: values.brand,
+          category: values.category,
           color: values.color,
           model: values.model,
           storage: values.storage,
@@ -105,6 +149,7 @@ const ItemList = () => {
           id: Math.floor(Math.random() * 1000),
           store: values['store'],
           brand: values['brand'],
+          category: values['category'],
           color: values['color'],
           model: values['model'],
           storage: values['storage'],
@@ -125,26 +170,30 @@ const ItemList = () => {
    const { items } = useSelector((state) => ({
      items: state.ItemReducer.items,
    }))
-  //  console.log('items', items)
-
+ 
+  const toggleViewModal = () => setModal1(!modal1)
    useEffect(() => {
      if (items && !items.length) {
        dispatch(onGetItems())
      }
    }, [dispatch, items])
-  useEffect(() => {
-    if (items && !items.length) {
-      dispatch(onGetItems())
-    }
-  }, [dispatch, items])
 
   useEffect(() => {
-      setItemList(items)
-  }, [items])
+  const storeItems = items.filter((item) => item.store === store)
+    if (switch1) {
+      const inStockItems = storeItems.filter((item) => item.status === 'IN STOCK')
+      setItemList(inStockItems)
+    } else {
+      const soldItems = storeItems.filter((item) => item.status === 'SOLD')
+      setItemList(soldItems)
+    }
+      // setItemList(items)
+  }, [items,switch1])
+
 
   useEffect(() => {
     if (!isEmpty(item) && !!isEdit) {
-      setItemList(items)
+      // setItemList(items)
       setIsEdit(false)
     }
   }, [items])
@@ -158,11 +207,11 @@ const ItemList = () => {
     }
   }
 
-  const handleItemClick = (arg) => {
-    const item = arg;
+  const handleItemClick = (item, type) => {
     setItem({
       id: item.id,
       store: item.store,
+      category: item.category,
       brand: item.brand,
       color: item.color,
       model: item.model,
@@ -173,9 +222,12 @@ const ItemList = () => {
       status: item.status,
       condition: item.condition,
     })
+    if(type === 'productEdit'){
     setIsEdit(true)
-
-    toggle()
+      toggle()
+    } else if (type === 'productView') {
+      toggleViewModal()
+    }
   }
   //delete item
   const [deleteModal, setDeleteModal] = useState(false)
@@ -184,7 +236,7 @@ const ItemList = () => {
     setItem(item)
     setDeleteModal(true)
   }
-console.log(item)
+
   const handleDeleteItem = () => {
     if (item) {
       dispatch(onDeleteItem(item))
@@ -196,7 +248,9 @@ console.log(item)
     setItemList("")
     setIsEdit(false)
   }
-
+ const toggleRightCanvas = () => {
+   setIsRight(!isRight)
+ }
    const columns = useMemo(
      () => [
        {
@@ -279,7 +333,16 @@ console.log(item)
            return <Status {...cellProps} />
          },
        },
-
+       {
+         Header: ' updatedAt',
+         accessor: 'updatedAt',
+         filterable: true,
+         sortable: true,
+         sortDescFirst: true,
+         Cell: (cellProps) => {
+           return <UpdatedAt {...cellProps} />
+         },
+       },
        {
          Header: 'Actions',
          accessor: 'actions',
@@ -291,13 +354,15 @@ console.log(item)
                  data-bs-toggle='tooltip'
                  data-bs-placement='top'
                  title='View'
+                 className='btn btn-sm btn-soft-success'
+                 onClick={() => {
+                   const itemData = cellProps.row.original
+                   setItem(itemData)
+                    toggleRightCanvas()
+                  
+                 }}
                >
-                 <Link
-                   to='/inventoryitems-details'
-                   className='btn btn-sm btn-soft-primary'
-                 >
-                   <i className='mdi mdi-eye-outline' id='viewtooltip'></i>
-                 </Link>
+                 <i className='mdi mdi-eye-outline' id='viewtooltip'></i>
                </li>
                <UncontrolledTooltip placement='top' target='viewtooltip'>
                  View
@@ -309,7 +374,7 @@ console.log(item)
                    className='btn btn-sm btn-soft-info'
                    onClick={() => {
                      const ItemData = cellProps.row.original
-                     handleItemClick(ItemData)
+                     handleItemClick(ItemData, 'productEdit')
                    }}
                  >
                    <i className='mdi mdi-pencil-outline' id='edittooltip' />
@@ -344,6 +409,11 @@ console.log(item)
 
   return (
     <React.Fragment>
+      <EcommerceOrdersModal
+        isOpen={modal1}
+        toggle={toggleViewModal}
+        item={item}
+      />
       <DeleteModal
         show={deleteModal}
         onDeleteClick={handleDeleteItem}
@@ -358,7 +428,27 @@ console.log(item)
                 <CardBody className='border-bottom'>
                   <div className='d-flex align-items-center'>
                     <h5 className='mb-0 card-title flex-grow-1'>Items List</h5>
+                    <div>
+                      <label className='form-label mb-0 m-6'>
+                        In Stock/Sold :{' '}
+                      </label>
+                      <Switch
+                        uncheckedIcon={<Offsymbol />}
+                        checkedIcon={<OnSymbol />}
+                        className='me-1 mb-sm-8'
+                        onColor='#34c38f'
+                        offColor='#f46a6a'
+                        onChange={() => {
+                          setSwitch1(!switch1)
+                        }}
+                        checked={switch1}
+                      />
+                    </div>
+
                     <div className='flex-shrink-0'>
+                      <Link to='#!' className='btn btn-light me-1'>
+                        <i className='mdi mdi-refresh'></i>
+                      </Link>
                       <Link
                         to='#!'
                         onClick={() => setModal(true)}
@@ -366,43 +456,24 @@ console.log(item)
                       >
                         Add New Item
                       </Link>
-                      <Link to='#!' className='btn btn-light me-1'>
-                        <i className='mdi mdi-refresh'></i>
-                      </Link>
-                      <UncontrolledDropdown className='dropdown d-inline-block me-1'>
-                        <DropdownToggle
-                          type='menu'
-                          className='btn btn-success'
-                          id='dropdownMenuButton1'
-                        >
-                          <i className='mdi mdi-dots-vertical'></i>
-                        </DropdownToggle>
-                        <DropdownMenu>
-                          <li>
-                            <DropdownItem href='#'>Action</DropdownItem>
-                          </li>
-                          <li>
-                            <DropdownItem href='#'>Another action</DropdownItem>
-                          </li>
-                          <li>
-                            <DropdownItem href='#'>
-                              Something else here
-                            </DropdownItem>
-                          </li>
-                        </DropdownMenu>
-                      </UncontrolledDropdown>
                     </div>
                   </div>
                 </CardBody>
                 <CardBody>
                   <TableContainer
                     columns={columns}
-                    data={items}
+                    data={itemList}
                     isGlobalFilter={true}
                     isAddOptions={false}
                     handleItemClicks={handleItemClick}
                     isItemListGlobalFilter={true}
-                    customPageSize={10}
+                    sortOptions={[
+                      {
+                        column: 'updatedAt',
+                        order: 'asc',
+                      },
+                    ]}
+                    customPageSize={15}
                   />
                 </CardBody>
               </Card>
@@ -724,6 +795,11 @@ console.log(item)
           </Modal>
         </div>
       </div>
+      <OffCanvas
+        isRight={isRight}
+        toggleRightCanvas={toggleRightCanvas}
+        searchResults={item}
+      />
     </React.Fragment>
   )
 }

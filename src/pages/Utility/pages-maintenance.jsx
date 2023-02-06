@@ -12,7 +12,7 @@ import logo from "../../assets/images/logo-dark.png"
 const PagesMaintenance = () => {
 
     //meta title
-    document.title = "Maintenance | Skote - Vite React Admin & Dashboard Template";
+    document.title = "Maintenance | Wireless + - Vite React Admin & Dashboard Template";
 
   return (
     <React.Fragment>

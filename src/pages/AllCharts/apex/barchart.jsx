@@ -43,6 +43,7 @@ const barchart = ({ dataColors }) => {
         "Germany",
       ],
     },
+    
   };
 
   return (

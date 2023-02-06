@@ -74,7 +74,7 @@ const App = props => {
           {authProtectedRoutes.map((route, idx) => (
             <Authmiddleware
               path={route.path}
-              layout={HorizontalLayout}
+              layout={Layout}
               component={route.component}
               key={idx}
               isAuthProtected={false}

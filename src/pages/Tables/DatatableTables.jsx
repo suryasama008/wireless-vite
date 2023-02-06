@@ -257,7 +257,7 @@ function DatatableTables() {
     ];
 
     //meta title
-    document.title = "Data Tables | Skote - Vite React Admin & Dashboard Template";
+    document.title = "Data Tables | Wireless + - Vite React Admin & Dashboard Template";
 
     return (
         <div className="page-content">

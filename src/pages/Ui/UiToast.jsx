@@ -22,7 +22,7 @@ import logo from "../../assets/images/logo.svg";
 const UiToast = () => {
 
     //meta title
-    document.title = "Toast | Skote - Vite React Admin & Dashboard Template";
+    document.title = "Toast | Wireless + - Vite React Admin & Dashboard Template";
 
     const [toast, setToast] = useState(false);
     const [toast2, setToast2] = useState(true);
@@ -96,7 +96,7 @@ const UiToast = () => {
                                         >
                                             <ToastHeader toggle={() => setToast2(!toast2)}>
                                                 <img src={logo} alt="" className="me-2" height="18" />
-                                                <strong className="me-auto">Skote</strong>
+                                                <strong className="me-auto">Wireless +</strong>
                                                 <small style={{ marginLeft: "165px" }} className="text-muted">11 mins ago</small>
                                             </ToastHeader>
                                             <ToastBody>
@@ -125,7 +125,7 @@ const UiToast = () => {
                                         >
                                             <ToastHeader toggle={() => setToast3(!toast3)}>
                                                 <img src={logo} alt="" className="me-2" height="18" />
-                                                <strong className="me-auto">Skote</strong>
+                                                <strong className="me-auto">Wireless +</strong>
                                                 <small style={{ marginLeft: "165px" }} className="text-muted">11 mins ago</small>
                                             </ToastHeader>
                                             <ToastBody>
@@ -156,7 +156,7 @@ const UiToast = () => {
                                                 >
                                                     <ToastHeader toggle={() => setToast4(!toast4)}>
                                                         <img src={logo} alt="" className="me-2" height="18" />
-                                                        <strong className="me-auto">Skote</strong>
+                                                        <strong className="me-auto">Wireless +</strong>
                                                         <small style={{ marginLeft: "175px" }} className="text-muted">just now</small>
                                                     </ToastHeader>
                                                     <ToastBody>
@@ -170,7 +170,7 @@ const UiToast = () => {
                                                 >
                                                     <ToastHeader toggle={() => setToast5(!toast5)}>
                                                         <img src={logo} alt="" className="me-2" height="18" />
-                                                        <strong className="me-auto">Skote</strong>
+                                                        <strong className="me-auto">Wireless +</strong>
                                                         <small style={{ marginLeft: "167px" }} className="text-muted">2 sec ago</small>
                                                     </ToastHeader>
                                                     <ToastBody>

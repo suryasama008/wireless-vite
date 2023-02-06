@@ -18,7 +18,7 @@ const Login = () => {
   const [show, setShow] = useState(false);
 
   //meta title
-  document.title = "Login | Skote - Vite React Admin & Dashboard Template";
+  document.title = "Login | Wireless + - Vite React Admin & Dashboard Template";
 
   // Form validation 
   const validation = useFormik({
@@ -49,7 +49,7 @@ const Login = () => {
                     <Col className="col-7">
                       <div className="text-primary p-4">
                         <h5 className="text-primary">Welcome Back !</h5>
-                        <p>Sign in to continue to Skote.</p>
+                        <p>Sign in to continue to Wireless +.</p>
                       </div>
                     </Col>
                     <Col className="col-5 align-self-end">
@@ -209,8 +209,8 @@ const Login = () => {
                   </Link>{" "}
                 </p>
                 <p>
-                  © {new Date().getFullYear()} Skote. Crafted with{" "}
-                  <i className="mdi mdi-heart text-danger" /> by Themesbrand
+                  © {new Date().getFullYear()} Wireless +. Crafted with{" "}
+                  <i className="mdi mdi-heart text-danger" /> by Surya Sama
                 </p>
               </div>
             </Col>

@@ -9,7 +9,7 @@ import Breadcrumbs from '../../../components/Common/Breadcrumb'
 import DeleteModal from '../../../components/Common/DeleteModal'
 import { useMemo } from 'react'
 import { items } from '../../../common/data'
-
+import EcommerceOrdersModal from './EcommerceOrdersModal'
 import {
   getItems as onGetItems,
   deleteItem as onDeleteItem,
@@ -50,42 +50,47 @@ import {
 const ItemList = () => {
   document.title = 'Item List'
   const [modal, setModal] = useState(false)
+  const [modal1, setModal1] = useState(false)
   const [isEdit, setIsEdit] = useState(false)
   const [itemList, setItemList] = useState([])
-  const [item, setItem] = useState({})
+  const [item, setItem] = useState(null)
 
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
     initialValues: {
-      store: '',
-      brand: '',
-      color: '',
-      model: '',
-      storage: '',
-      imei: '',
-      battery: '',
-      sellingPrice: '',
-      status: '',
-      condition: '',
+      id: (item && item.id) || '',
+      store: (item && item.store) || '',
+      category: (item && item.category) || '',
+      brand: (item && item.brand) || '',
+      color: (item && item.color) || '',
+      model: (item && item.model) || '',
+      storage: (item && item.storage) || '',
+      imei: (item && item.imei) || '',
+      battery: (item && item.battery) || '',
+      sellingPrice: (item && item.sellingPrice) || '',
+      status: (item && item.status) || '',
+      condition: (item && item.condition) || '',
     },
     validationSchema: Yup.object({
       store: Yup.string().required('Store is required'),
-      brand: Yup.string().required('Brand is required'),
+      // brand: Yup.string().required('Brand is required'),
       color: Yup.string().required('Color is required'),
-      model: Yup.string().required('Model is required'),
-      storage: Yup.string().required('Storage is required'),
-      imei: Yup.string().required('Imei is required'),
-      battery: Yup.string().required('Battery is required'),
-      sellingPrice: Yup.string().required('Selling Price is required'),
-      status: Yup.string().required('Status is required'),
-      condition: Yup.string().required('Condition is required'),
+      // model: Yup.string().required('Model is required'),
+      // storage: Yup.string().required('Storage is required'),
+      // imei: Yup.string().required('Imei is required'),
+      // battery: Yup.string().required('Battery is required'),
+      // sellingPrice: Yup.string().required('Selling Price is required'),
+      // status: Yup.string().required('Status is required'),
+      // condition: Yup.string().required('Condition is required'),
     }),
     onSubmit: (values) => {
       if (isEdit) {
         const updatedItem = {
+          id: item.id,
           store: values.store,
           brand: values.brand,
+          category: values.category,
           color: values.color,
           model: values.model,
           storage: values.storage,
@@ -95,21 +100,25 @@ const ItemList = () => {
           status: values.status,
           condition: values.condition,
         }
-        dispatchEvent(onUpdateItem(updatedItem))
+        // console.log('updatedItem', updatedItem)
+        dispatch(onUpdateItem(updatedItem))
         validation.resetForm()
       } else {
         const newItem = {
-          store: values['color'],
+          id: Math.floor(Math.random() * 1000),
+          store: values['store'],
           brand: values['brand'],
+          category: values['category'],
           color: values['color'],
           model: values['model'],
           storage: values['storage'],
           imei: values['imei'],
           battery: values['battery'],
           sellingPrice: values['sellingPrice'],
-          status: values['status'],
+          status: 'In Stock',
           condition: values['condition'],
         }
+        console.log('newItem', newItem)
         dispatch(onAddNewItem(newItem))
         validation.resetForm()
       }
@@ -121,13 +130,8 @@ const ItemList = () => {
   const { items } = useSelector((state) => ({
     items: state.ItemReducer.items,
   }))
-  console.log('items', items)
 
-  useEffect(() => {
-    if (items && !items.length) {
-      dispatch(onGetItems())
-    }
-  }, [dispatch, items])
+  const toggleViewModal = () => setModal1(!modal1)
   useEffect(() => {
     if (items && !items.length) {
       dispatch(onGetItems())
@@ -148,16 +152,17 @@ const ItemList = () => {
   const toggle = () => {
     if (modal) {
       setModal(false)
-      setSelectedItem(null)
+      setItem(null)
     } else {
       setModal(true)
     }
   }
 
-  const handleItemClick = (arg) => {
-    const item = arg
+  const handleItemClick = (item, type) => {
     setItem({
+      id: item.id,
       store: item.store,
+      category: item.category,
       brand: item.brand,
       color: item.color,
       model: item.model,
@@ -168,11 +173,13 @@ const ItemList = () => {
       status: item.status,
       condition: item.condition,
     })
-    setIsEdit(true)
-
-    toggle()
+    if (type === 'productEdit') {
+      setIsEdit(true)
+      toggle()
+    } else if (type === 'productView') {
+      toggleViewModal()
+    }
   }
-
   //delete item
   const [deleteModal, setDeleteModal] = useState(false)
 
@@ -283,13 +290,17 @@ const ItemList = () => {
         Cell: (cellProps) => {
           return (
             <ul className='list-unstyled hstack gap-1 mb-0'>
-              <li data-bs-toggle='tooltip' data-bs-placement='top' title='View'>
-                <Link
-                  to='/inventoryitems-details'
-                  className='btn btn-sm btn-soft-primary'
-                >
-                  <i className='mdi mdi-eye-outline' id='viewtooltip'></i>
-                </Link>
+              <li
+                data-bs-toggle='tooltip'
+                data-bs-placement='top'
+                title='View'
+                className='btn btn-sm btn-soft-success'
+                onClick={() => {
+                  const ItemData = cellProps.row.original
+                  handleItemClick(ItemData, 'productView')
+                }}
+              >
+                <i className='mdi mdi-eye-outline' id='viewtooltip'></i>
               </li>
               <UncontrolledTooltip placement='top' target='viewtooltip'>
                 View
@@ -301,7 +312,7 @@ const ItemList = () => {
                   className='btn btn-sm btn-soft-info'
                   onClick={() => {
                     const ItemData = cellProps.row.original
-                    handleItemClick(ItemData)
+                    handleItemClick(ItemData, 'productEdit')
                   }}
                 >
                   <i className='mdi mdi-pencil-outline' id='edittooltip' />
@@ -336,6 +347,11 @@ const ItemList = () => {
 
   return (
     <React.Fragment>
+      <EcommerceOrdersModal
+        isOpen={modal1}
+        toggle={toggleViewModal}
+        item={item}
+      />
       <DeleteModal
         show={deleteModal}
         onDeleteClick={handleDeleteItem}
@@ -343,13 +359,13 @@ const ItemList = () => {
       />
       <div className='page-content'>
         <div className='container-fluid'>
-          <Breadcrumbs title='Items' breadcrumbItem='Items Lists' />
+          <Breadcrumbs title='Items' breadcrumbItem='Items List' />
           <Row>
             <Col lg='12'>
               <Card>
                 <CardBody className='border-bottom'>
                   <div className='d-flex align-items-center'>
-                    <h5 className='mb-0 card-title flex-grow-1'>Item Lists</h5>
+                    <h5 className='mb-0 card-title flex-grow-1'>Items List</h5>
                     <div className='flex-shrink-0'>
                       <Link
                         to='#!'
@@ -456,6 +472,65 @@ const ItemList = () => {
                         </FormFeedback>
                       ) : null}
                     </div>
+                    <div className='btn-group' role='group'>
+                      <input
+                        type='radio'
+                        className='btn-check'
+                        name='btnradio'
+                        id='btnradio4'
+                        autoComplete='off'
+                        value={validation.values.category}
+                        checked={validation.values.category === 'Mobile'}
+                        onChange={validation.handleChange}
+                      />
+                      <label
+                        className='btn btn-outline-primary'
+                        htmlFor='btnradio4'
+                      >
+                        Mobile
+                      </label>
+
+                      <input
+                        type='radio'
+                        className='btn-check'
+                        name='btnradio'
+                        id='btnradio5'
+                        autoComplete='off'
+                        value={validation.values.category}
+                        checked={validation.values.category === 'Tablet'}
+                        onChange={validation.handleChange}
+                      />
+                      <label
+                        className='btn btn-outline-primary'
+                        htmlFor='btnradio5'
+                      >
+                        Tablet
+                      </label>
+
+                      <input
+                        type='radio'
+                        className='btn-check'
+                        name='btnradio'
+                        id='btnradio6'
+                        autoComplete='off'
+                        value={validation.values.category}
+                        checked={validation.values.category === 'Accessory'}
+                        onChange={validation.handleChange}
+                      />
+                      <label
+                        className='btn btn-outline-primary'
+                        htmlFor='btnradio6'
+                      >
+                        Accessory
+                      </label>
+                      {validation.touched.category &&
+                      validation.errors.category ? (
+                        <FormFeedback type='invalid'>
+                          {validation.errors.category}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+
                     <div className='mb-3'>
                       <Label className='form-label'>Condition</Label>
                       <Input

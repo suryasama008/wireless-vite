@@ -22,7 +22,7 @@ import logo from "../../assets/images/logo.svg";
 const Recoverpw = () => {
 
   //meta title
-  document.title="Recover Password | Skote - Vite React Admin & Dashboard Template";
+  document.title="Recover Password | Wireless + - Vite React Admin & Dashboard Template";
 
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -51,7 +51,7 @@ const Recoverpw = () => {
                     <Col xs={7}>
                       <div className="text-primary p-4">
                         <h5 className="text-primary"> Reset Password</h5>
-                        <p>Reset Password with Skote.</p>
+                        <p>Reset Password with Wireless +.</p>
                       </div>
                     </Col>
                     <Col xs={5} className="align-self-end">
@@ -134,8 +134,8 @@ const Recoverpw = () => {
                   </Link>{" "}
                 </p>
                 <p>
-                  © {new Date().getFullYear()} Skote. Crafted with{" "}
-                  <i className="mdi mdi-heart text-danger"></i> by Themesbrand
+                  © {new Date().getFullYear()} Wireless +. Crafted with{" "}
+                  <i className="mdi mdi-heart text-danger"></i> by Surya Sama
                 </p>
               </div>
             </Col>

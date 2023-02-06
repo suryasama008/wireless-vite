@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { isEmpty } from "lodash";
+// import React, { useState, useEffect } from 'react'
+import html2canvas from 'html2canvas'
+import QRCode from 'react-qr-code'
 
 import {
   Button,
@@ -52,11 +55,14 @@ import BootstrapTheme from "@fullcalendar/bootstrap";
 const Calender = props => {
 
   //meta title
-  document.title = "Full Calendar | Skote - Vite React Admin & Dashboard Template";
+  document.title = "Full Calendar | Wireless + - Vite React Admin & Dashboard Template";
 
   const dispatch = useDispatch();
 
   const [event, setEvent] = useState({});
+
+  const [dataUrl, setDataUrl] = useState('')
+  const [showQRCode, setShowQRCode] = useState(false)
 
   // events validation
   const validation = useFormik({
@@ -68,8 +74,8 @@ const Calender = props => {
       category: (event && event.category) || '',
     },
     validationSchema: Yup.object({
-      title: Yup.string().required("Please Enter Your Event Name"),
-      category: Yup.string().required("Please Select Your Category"),
+      title: Yup.string().required("Please Enter Employee Name"),
+      category: Yup.string().required("Please Select Store"),
     }),
     onSubmit: (values) => {
       if (isEdit) {
@@ -97,6 +103,33 @@ const Calender = props => {
       toggle();
     },
   });
+
+/* Taking a screenshot of the table and saving it as a data url. */
+useEffect(() => {
+  async function convertTableToCanvas() {
+    const canvas = await html2canvas(document.getElementById('table'))
+    setDataUrl(canvas.toDataURL())
+  }
+  convertTableToCanvas()
+}, [])
+  
+/**
+ * It creates a link element, sets the download attribute to table.png, sets the href attribute to the
+ * dataUrl, and then clicks the link.
+ */
+   function handleDownload() {
+     const link = document.createElement('a')
+     link.download = 'table.png'
+     link.href = dataUrl
+     link.click()
+   }
+  
+ /**
+  * It toggles the showQRCode state variable.
+  */
+  function handleQRCodeButton() {
+    setShowQRCode(!showQRCode)
+  }
 
   // category validation
   const categoryValidation = useFormik({
@@ -268,68 +301,79 @@ const Calender = props => {
         onDeleteClick={handleDeleteEvent}
         onCloseClick={() => setDeleteModal(false)}
       />
-      <div className="page-content">
+      <div className='page-content'>
         <Container fluid={true}>
           {/* Render Breadcrumb */}
-          <Breadcrumbs title="Calendar" breadcrumbItem="Calendar" />
+          <Breadcrumbs title='Calendar' breadcrumbItem='Calendar' />
+          <button onClick={handleQRCodeButton}>
+            {showQRCode ? 'Hide' : 'Show'} QR Code
+          </button>
+          {showQRCode && dataUrl && (
+            <div>
+              <QRCode value={dataUrl} size={200} />
+
+              <button onClick={handleDownload}>Download QR Code</button>
+            </div>
+          )}
           <Row>
-            <Col className="col-12">
+            <Col className='col-12'>
               <Row>
                 <Col lg={3}>
                   <Card>
                     <CardBody>
-                      <div className="d-grid">
+                      <div className='d-grid'>
                         <Button
-                          color="primary"
-                          className="font-16 btn-block"
+                          color='primary'
+                          className='font-16 btn-block'
                           onClick={toggleCategory}
                         >
-                          <i className="mdi mdi-plus-circle-outline me-1" />
+                          <i className='mdi mdi-plus-circle-outline me-1' />
                           Create New Event
                         </Button>
                       </div>
 
-                      <div id="external-events" className="mt-2">
+                      <div id='external-events' className='mt-2'>
                         <br />
-                        <p className="text-muted">
+                        <p className='text-muted'>
                           Drag and drop your event or click in the calendar
                         </p>
                         {categories &&
                           categories.map((category, i) => (
                             <div
                               className={`${category.type} external-event fc-event text-white`}
-                              key={"cat-" + category.id}
+                              key={'cat-' + category.id}
                               draggable
-                              onDrag={event => onDrag(event, category)}
+                              onDrag={(event) => onDrag(event, category)}
                             >
-                              <i className="mdi mdi-checkbox-blank-circle font-size-11 me-2" />
+                              <i className='mdi mdi-checkbox-blank-circle font-size-11 me-2' />
                               {category.title}
                             </div>
                           ))}
                       </div>
 
-                      <Row className="justify-content-center mt-5">
-                        <img src={verification} alt="" className="img-fluid d-block" />
+                      <Row className='justify-content-center mt-5'>
+                        <img
+                          src={verification}
+                          alt=''
+                          className='img-fluid d-block'
+                        />
                       </Row>
                     </CardBody>
                   </Card>
                 </Col>
 
-                <Col className="col-lg-9">
+                <Col className='col-lg-9'>
                   {/* fullcalendar control */}
                   <FullCalendar
-                    plugins={[
-                      BootstrapTheme,
-                      dayGridPlugin,
-                      interactionPlugin,
-                    ]}
-                    slotDuration={"00:15:00"}
+                    id='table'
+                    plugins={[BootstrapTheme, dayGridPlugin, interactionPlugin]}
+                    slotDuration={'00:15:00'}
                     handleWindowResize={true}
-                    themeSystem="bootstrap"
+                    themeSystem='bootstrap'
                     headerToolbar={{
-                      left: "prev,next today",
-                      center: "title",
-                      right: "dayGridMonth,dayGridWeek,dayGridDay",
+                      left: 'prev,next today',
+                      center: 'title',
+                      right: 'dayGridMonth,dayGridWeek,dayGridDay',
                     }}
                     events={events}
                     editable={true}
@@ -341,93 +385,104 @@ const Calender = props => {
                   />
 
                   {/* New/Edit event modal */}
-                  <Modal
-                    isOpen={modal}
-                    className={props.className}
-                    centered
-                  >
-                    <ModalHeader toggle={toggle} tag="h5" className="py-3 px-4 border-bottom-0">
-                      {!!isEdit ? "Edit Event" : "Add Event"}
+                  <Modal isOpen={modal} className={props.className} centered>
+                    <ModalHeader
+                      toggle={toggle}
+                      tag='h5'
+                      className='py-3 px-4 border-bottom-0'
+                    >
+                      {!!isEdit ? 'Edit Event' : 'Add Event'}
                     </ModalHeader>
-                    <ModalBody className="p-4">
+                    <ModalBody className='p-4'>
                       <Form
                         onSubmit={(e) => {
-                          e.preventDefault();
-                          validation.handleSubmit();
-                          return false;
+                          e.preventDefault()
+                          validation.handleSubmit()
+                          return false
                         }}
                       >
                         <Row>
-                          <Col className="col-12">
-                            <div className="mb-3">
-                              <Label className="form-label">Event Name</Label>
+                          <Col className='col-12'>
+                            <div className='mb-3'>
+                              <Label className='form-label'>Event Name</Label>
                               <Input
-                                name="title"
-                                type="text"
+                                name='title'
+                                type='text'
                                 // value={event ? event.title : ""}
                                 onChange={validation.handleChange}
                                 onBlur={validation.handleBlur}
-                                value={validation.values.title || ""}
+                                value={validation.values.title || ''}
                                 invalid={
-                                  validation.touched.title && validation.errors.title ? true : false
+                                  validation.touched.title &&
+                                  validation.errors.title
+                                    ? true
+                                    : false
                                 }
                               />
-                              {validation.touched.title && validation.errors.title ? (
-                                <FormFeedback type="invalid">{validation.errors.title}</FormFeedback>
+                              {validation.touched.title &&
+                              validation.errors.title ? (
+                                <FormFeedback type='invalid'>
+                                  {validation.errors.title}
+                                </FormFeedback>
                               ) : null}
                             </div>
                           </Col>
-                          <Col className="col-12">
-                            <div className="mb-3">
-                              <Label className="form-label">Category</Label>
+                          <Col className='col-12'>
+                            <div className='mb-3'>
+                              <Label className='form-label'>Category</Label>
                               <Input
-                                type="select"
-                                name="category"
+                                type='select'
+                                name='category'
                                 // value={event ? event.category : "bg-primary"}
                                 onChange={validation.handleChange}
                                 onBlur={validation.handleBlur}
-                                value={validation.values.category || ""}
+                                value={validation.values.category || ''}
                                 invalid={
-                                  validation.touched.category && validation.errors.category ? true : false
+                                  validation.touched.category &&
+                                  validation.errors.category
+                                    ? true
+                                    : false
                                 }
                               >
-                                <option value="bg-danger">Danger</option>
-                                <option value="bg-success">Success</option>
-                                <option value="bg-primary">Primary</option>
-                                <option value="bg-info">Info</option>
-                                <option value="bg-dark">Dark</option>
-                                <option value="bg-warning">Warning</option>
+                                <option value='bg-danger'>BCC UL</option>
+                                <option value='bg-success'>BCC LL</option>
+                                <option value='bg-primary'>EMTC</option>
+                                <option value='bg-info'>SQUARE ONE</option>
                               </Input>
-                              {validation.touched.category && validation.errors.category ? (
-                                <FormFeedback type="invalid">{validation.errors.category}</FormFeedback>
+                              {validation.touched.category &&
+                              validation.errors.category ? (
+                                <FormFeedback type='invalid'>
+                                  {validation.errors.category}
+                                </FormFeedback>
                               ) : null}
                             </div>
                           </Col>
                         </Row>
 
-                        <Row className="mt-2">
-                          <Col className="col-6">
+                        <Row className='mt-2'>
+                          <Col className='col-6'>
                             {!!isEdit && (
                               <button
-                                type="button"
-                                className="btn btn-danger me-2"
+                                type='button'
+                                className='btn btn-danger me-2'
                                 onClick={() => setDeleteModal(true)}
                               >
                                 Delete
                               </button>
                             )}
                           </Col>
-                          <Col className="col-6 text-end">
+                          <Col className='col-6 text-end'>
                             <button
-                              type="button"
-                              className="btn btn-light me-2"
+                              type='button'
+                              className='btn btn-light me-2'
                               onClick={toggle}
                             >
                               Close
                             </button>
-                            <button type="submit"
-                              className="btn btn-success"
-                              id="btn-save-event"
+                            <button
+                              type='submit'
+                              className='btn btn-success'
+                              id='btn-save-event'
                             >
                               Save
                             </button>
@@ -443,82 +498,98 @@ const Calender = props => {
                     className={props.className}
                     centered
                   >
-                    <ModalHeader toggle={toggleCategory} tag="h5">
+                    <ModalHeader toggle={toggleCategory} tag='h5'>
                       Add Event
                     </ModalHeader>
-                    <ModalBody className="p-4">
+                    <ModalBody className='p-4'>
                       <Form
                         onSubmit={(e) => {
-                          e.preventDefault();
-                          categoryValidation.handleSubmit();
-                          return false;
+                          e.preventDefault()
+                          categoryValidation.handleSubmit()
+                          return false
                         }}
                       >
                         <Row>
-                          <Col className="col-12">
-                            <div className="mb-3">
-                              <Label className="form-label">Event Name</Label>
+                          <Col className='col-12'>
+                            <div className='mb-3'>
+                              <Label className='form-label'>Event Name</Label>
                               <Input
-                                name="title"
-                                type="text"
+                                name='title'
+                                type='text'
                                 // value={event ? event.title : ""}
-                                placeholder="Insert Event Name"
+                                placeholder='Insert Event Name'
                                 onChange={categoryValidation.handleChange}
                                 onBlur={categoryValidation.handleBlur}
-                                value={categoryValidation.values.title || ""}
+                                value={categoryValidation.values.title || ''}
                                 invalid={
-                                  categoryValidation.touched.title && categoryValidation.errors.title ? true : false
+                                  categoryValidation.touched.title &&
+                                  categoryValidation.errors.title
+                                    ? true
+                                    : false
                                 }
                               />
-                              {categoryValidation.touched.title && categoryValidation.errors.title ? (
-                                <FormFeedback type="invalid">{categoryValidation.errors.title}</FormFeedback>
+                              {categoryValidation.touched.title &&
+                              categoryValidation.errors.title ? (
+                                <FormFeedback type='invalid'>
+                                  {categoryValidation.errors.title}
+                                </FormFeedback>
                               ) : null}
                             </div>
                           </Col>
-                          <Col className="col-12">
-                            <div className="mb-3">
-                              <Label className="form-label">Category</Label>
+                          <Col className='col-12'>
+                            <div className='mb-3'>
+                              <Label className='form-label'>Category</Label>
                               <Input
-                                type="select"
-                                name="category"
-                                placeholder="All Day Event"
+                                type='select'
+                                name='category'
+                                placeholder='All Day Event'
                                 onChange={categoryValidation.handleChange}
                                 onBlur={categoryValidation.handleBlur}
-                                value={categoryValidation.values.category || ""}
+                                value={categoryValidation.values.category || ''}
                                 invalid={
-                                  categoryValidation.touched.category && categoryValidation.errors.category ? true : false
+                                  categoryValidation.touched.category &&
+                                  categoryValidation.errors.category
+                                    ? true
+                                    : false
                                 }
                               >
-                                <option value="bg-danger">Danger</option>
-                                <option value="bg-success">Success</option>
-                                <option value="bg-primary">Primary</option>
-                                <option value="bg-info">Info</option>
-                                <option value="bg-dark">Dark</option>
-                                <option value="bg-warning">Warning</option>
+                                <option value='bg-danger'>SQUARE ONE</option>
+                                <option value='bg-success'>BCC LL</option>
+                                <option value='bg-primary'>BCC UL</option>
+                                <option value='bg-info'>EMTC</option>
                               </Input>
-                              {categoryValidation.touched.category && categoryValidation.errors.category ? (
-                                <FormFeedback type="invalid">{categoryValidation.errors.category}</FormFeedback>
+                              {categoryValidation.touched.category &&
+                              categoryValidation.errors.category ? (
+                                <FormFeedback type='invalid'>
+                                  {categoryValidation.errors.category}
+                                </FormFeedback>
                               ) : null}
                             </div>
                           </Col>
                         </Row>
 
-                        <Row className="mt-2">
-                          <Col className="col-6">
-                            <button type="button" className="btn btn-danger" id="btn-delete-event">Delete</button>
-                          </Col>
-                          <Col className="col-6 text-end">
+                        <Row className='mt-2'>
+                          <Col className='col-6'>
                             <button
-                              type="button"
-                              className="btn btn-light me-1"
+                              type='button'
+                              className='btn btn-danger'
+                              id='btn-delete-event'
+                            >
+                              Delete
+                            </button>
+                          </Col>
+                          <Col className='col-6 text-end'>
+                            <button
+                              type='button'
+                              className='btn btn-light me-1'
                               onClick={toggleCategory}
                             >
                               Close
                             </button>
                             <button
-                              type="submit"
-                              className="btn btn-success"
-                              id="btn-save-event"
+                              type='submit'
+                              className='btn btn-success'
+                              id='btn-save-event'
                             >
                               Save
                             </button>
@@ -534,7 +605,7 @@ const Calender = props => {
         </Container>
       </div>
     </React.Fragment>
-  );
+  )
 };
 
 Calender.propTypes = {

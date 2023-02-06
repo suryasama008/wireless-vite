@@ -386,7 +386,7 @@ box-shadow: $box-shadow;
 
 body[data-sidebar="dark"] {
   .vertical-menu {
-      background: $sidebar-dark-bg;
+      background: #083a8a
   }
 
   #sidebar-menu {
@@ -439,7 +439,7 @@ body[data-sidebar="dark"] {
         > li {
           &:hover {
             > a {
-              background: lighten($sidebar-dark-bg, 2%);
+              background: #083a8a;
               color: $sidebar-dark-menu-item-hover-color;
               i {
                 color: $sidebar-dark-menu-item-hover-color;
@@ -458,7 +458,7 @@ body[data-sidebar="dark"] {
                   }
 
                   ul{
-                      background-color: $sidebar-dark-bg;
+                      background-color: #083a8a
                   }
                   
               }

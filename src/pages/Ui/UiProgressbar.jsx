@@ -7,7 +7,7 @@ import Breadcrumbs from "../../components/Common/Breadcrumb"
 const UiProgressbar = () => {
 
   //meta title
-  document.title = "Progress Bars | Skote - Vite React Admin & Dashboard Template";
+  document.title = "Progress Bars | Wireless + - Vite React Admin & Dashboard Template";
 
   return (
     <React.Fragment>

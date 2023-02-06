@@ -19,7 +19,7 @@ import logolight from "../../assets/images/logo-light.png"
 const TwostepVerification = () => {
 
   //meta title
-  document.title = "Two Step Verification | Skote - Vite React Admin & Dashboard Template";
+  document.title = "Two Step Verification | Wireless + - Vite React Admin & Dashboard Template";
 
   return (
     <React.Fragment>
@@ -136,8 +136,8 @@ const TwostepVerification = () => {
                   </a>{" "}
                 </p>
                 <p>
-                  © {new Date().getFullYear()} Skote. Crafted with{" "}
-                  <i className="mdi mdi-heart text-danger"></i> by Themesbrand
+                  © {new Date().getFullYear()} Wireless +. Crafted with{" "}
+                  <i className="mdi mdi-heart text-danger"></i> by Surya Sama
                 </p>
               </div>
             </Col>

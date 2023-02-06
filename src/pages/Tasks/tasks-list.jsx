@@ -27,7 +27,7 @@ import { useSelector, useDispatch } from "react-redux"
 const TasksList = () => {
 
   //meta title
-  document.title="Task List | Skote - Vite React Admin & Dashboard Template";
+  document.title="Task List | Wireless + - Vite React Admin & Dashboard Template";
 
   const dispatch = useDispatch()
 
@@ -63,7 +63,7 @@ const TasksList = () => {
                             </div>
                           </td>
                           <td>
-                            <h5 className="text-truncate font-size-14 m-0"><Link to="#" className="text-dark">Create a Skote Dashboard UI</Link></h5>
+                            <h5 className="text-truncate font-size-14 m-0"><Link to="#" className="text-dark">Create a Wireless + Dashboard UI</Link></h5>
                           </td>
                           <td>
                             <div className="avatar-group">
@@ -138,7 +138,7 @@ const TasksList = () => {
                             </div>
                           </td>
                           <td>
-                            <h5 className="text-truncate font-size-14 m-0"><Link to="#" className="text-dark">Create a Skote Logo</Link></h5>
+                            <h5 className="text-truncate font-size-14 m-0"><Link to="#" className="text-dark">Create a Wireless + Logo</Link></h5>
                           </td>
                           <td>
                             <div className="avatar-group">

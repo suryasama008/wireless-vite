@@ -33,7 +33,7 @@ import verificationImg from "../../assets/images/verification-img.png";
 const CryptoKYCApplication = props => {
 
   //meta title
-  document.title="KYC Application | Skote - Vite React Admin & Dashboard Template";
+  document.title="KYC Application | Wireless + - Vite React Admin & Dashboard Template";
 
   const [modal, setModal] = useState(false);
   const [activeTab, setActiveTab] = useState(1);

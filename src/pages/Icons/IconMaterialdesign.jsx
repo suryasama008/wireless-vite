@@ -23469,7 +23469,7 @@ const IconMaterialdesign = () => {
   })
 
    //meta title
-   document.title = "Material Design | Skote - Vite React Admin & Dashboard Template";
+   document.title = "Material Design | Wireless + - Vite React Admin & Dashboard Template";
 
   return (
     <React.Fragment>

@@ -6,7 +6,7 @@ import Breadcrumbs from "../../../components/Common/Breadcrumb";
 import List from './List';
 
 const CandidateList = () => {
-    document.title = "Candidate List | Skote - Vite React Admin & Dashboard Template";
+    document.title = "Candidate List | Wireless + - Vite React Admin & Dashboard Template";
 
     const [isOpen, setIsOpen] = useState(false);
     const toggle = () => setIsOpen(!isOpen);    

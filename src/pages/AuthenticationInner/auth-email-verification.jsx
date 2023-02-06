@@ -9,7 +9,7 @@ import logolight from "../../assets/images/logo-light.png"
 const EmailVerification = () => {
 
   //meta title
-  document.title="Email Verification | Skote - Vite React Admin & Dashboard Template";
+  document.title="Email Verification | Wireless + - Vite React Admin & Dashboard Template";
 
   return (
     <React.Fragment>
@@ -78,8 +78,8 @@ const EmailVerification = () => {
                   </a>{" "}
                 </p>
                 <p>
-                  © {new Date().getFullYear()} Skote. Crafted with{" "}
-                  <i className="mdi mdi-heart text-danger"></i> by Themesbrand
+                  © {new Date().getFullYear()} Wireless +. Crafted with{" "}
+                  <i className="mdi mdi-heart text-danger"></i> by Surya Sama
                 </p>
               </div>
             </Col>

@@ -63,7 +63,7 @@ const orderSummary = [
 const EcommerceCheckout = () => {
 
   //meta title
-  document.title="Checkout | Skote - Vite React Admin & Dashboard Template";
+  document.title="Checkout | Wireless + - Vite React Admin & Dashboard Template";
 
   const [activeTab, setactiveTab] = useState("1")
   const [selectedGroup, setselectedGroup] = useState(null)

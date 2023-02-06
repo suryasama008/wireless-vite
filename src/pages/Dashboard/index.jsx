@@ -53,12 +53,12 @@ const Dashboard = props => {
   }));
 
   const reports = [
-    { title: "Orders", iconClass: "bx-copy-alt", description: "1,235" },
-    { title: "Revenue", iconClass: "bx-archive-in", description: "$35, 723" },
+    { title: "Product Sold", iconClass: "bx-copy-alt", description: "62" },
+    { title: "This Month Revenue", iconClass: "bx-archive-in", description: "$35, 723" },
     {
-      title: "Average Price",
+      title: "This Month Expenses",
       iconClass: "bx-purchase-tag-alt",
-      description: "$16.2",
+      description: "$3600",
     },
   ];
 
@@ -86,42 +86,42 @@ const Dashboard = props => {
   }, [dispatch]);
 
   //meta title
-  document.title="Dashboard | Skote - Vite React Admin & Dashboard Template";
+  document.title="Dashboard | Store Admin Dashboard ";
 
   return (
     <React.Fragment>
-      <div className="page-content">
+      <div className='page-content'>
         <Container fluid>
           {/* Render Breadcrumb */}
           <Breadcrumbs
-            title={props.t("Dashboards")}
-            breadcrumbItem={props.t("Dashboard")}
+            title={props.t('Dashboards')}
+            breadcrumbItem={props.t('Dashboard')}
           />
 
           <Row>
-            <Col xl="4">
+            <Col xl='4'>
               <WelcomeComp />
               <MonthlyEarning />
             </Col>
-            <Col xl="8">
+            <Col xl='8'>
               <Row>
                 {/* Reports Render */}
                 {reports.map((report, key) => (
-                  <Col md="4" key={"_col_" + key}>
-                    <Card className="mini-stats-wid">
+                  <Col md='4' key={'_col_' + key}>
+                    <Card className='mini-stats-wid'>
                       <CardBody>
-                        <div className="d-flex">
-                          <div className="flex-grow-1">
-                            <p className="text-muted fw-medium">
+                        <div className='d-flex'>
+                          <div className='flex-grow-1'>
+                            <p className='text-muted fw-medium'>
                               {report.title}
                             </p>
-                            <h4 className="mb-0">{report.description}</h4>
+                            <h4 className='mb-0'>{report.description}</h4>
                           </div>
-                          <div className="avatar-sm rounded-circle bg-primary align-self-center mini-stat-icon">
-                            <span className="avatar-title rounded-circle bg-primary">
+                          <div className='avatar-sm rounded-circle bg-primary align-self-center mini-stat-icon'>
+                            <span className='avatar-title rounded-circle bg-primary'>
                               <i
                                 className={
-                                  "bx " + report.iconClass + " font-size-24"
+                                  'bx ' + report.iconClass + ' font-size-24'
                                 }
                               ></i>
                             </span>
@@ -135,51 +135,51 @@ const Dashboard = props => {
 
               <Card>
                 <CardBody>
-                  <div className="d-sm-flex flex-wrap">
-                    <h4 className="card-title mb-4">Email Sent</h4>
-                    <div className="ms-auto">
-                      <ul className="nav nav-pills">
-                        <li className="nav-item">
+                  <div className='d-sm-flex flex-wrap'>
+                    <h4 className='card-title mb-4'>Email Sent</h4>
+                    <div className='ms-auto'>
+                      <ul className='nav nav-pills'>
+                        <li className='nav-item'>
                           <Link
-                            to="#"
+                            to='#'
                             className={classNames(
-                              { active: periodType === "weekly" },
-                              "nav-link"
+                              { active: periodType === 'weekly' },
+                              'nav-link'
                             )}
                             onClick={() => {
-                              onChangeChartPeriod("weekly");
+                              onChangeChartPeriod('weekly')
                             }}
-                            id="one_month"
+                            id='one_month'
                           >
                             Week
-                          </Link>{" "}
+                          </Link>{' '}
                         </li>
-                        <li className="nav-item">
+                        <li className='nav-item'>
                           <Link
-                            to="#"
+                            to='#'
                             className={classNames(
-                              { active: periodType === "monthly" },
-                              "nav-link"
+                              { active: periodType === 'monthly' },
+                              'nav-link'
                             )}
                             onClick={() => {
-                              onChangeChartPeriod("monthly");
+                              onChangeChartPeriod('monthly')
                             }}
-                            id="one_month"
+                            id='one_month'
                           >
                             Month
                           </Link>
                         </li>
-                        <li className="nav-item">
+                        <li className='nav-item'>
                           <Link
-                            to="#"
+                            to='#'
                             className={classNames(
-                              { active: periodType === "yearly" },
-                              "nav-link"
+                              { active: periodType === 'yearly' },
+                              'nav-link'
                             )}
                             onClick={() => {
-                              onChangeChartPeriod("yearly");
+                              onChangeChartPeriod('yearly')
                             }}
-                            id="one_month"
+                            id='one_month'
                           >
                             Year
                           </Link>
@@ -188,27 +188,30 @@ const Dashboard = props => {
                     </div>
                   </div>
                   {/* <div className="clearfix"></div> */}
-                  <StackedColumnChart periodData={periodData} dataColors='["--bs-primary", "--bs-warning", "--bs-success"]'/>
+                  <StackedColumnChart
+                    periodData={periodData}
+                    dataColors='["--bs-primary", "--bs-warning", "--bs-success"]'
+                  />
                 </CardBody>
               </Card>
             </Col>
           </Row>
 
           <Row>
-            <Col xl="4">
+            <Col xl='4'>
               <SocialSource />
             </Col>
-            <Col xl="4">
+            <Col xl='4'>
               <ActivityComp />
             </Col>
 
-            <Col xl="4">
+            <Col xl='4'>
               <TopCities />
             </Col>
           </Row>
 
           <Row>
-            <Col lg="12">
+            <Col lg='12'>
               <LatestTranaction />
             </Col>
           </Row>
@@ -218,47 +221,36 @@ const Dashboard = props => {
       {/* subscribe ModalHeader */}
       <Modal
         isOpen={subscribemodal}
-        role="dialog"
+        role='dialog'
         autoFocus={true}
         centered
-        data-toggle="modal"
+        data-toggle='modal'
         toggle={() => {
-          setSubscribemodal(!subscribemodal);
+          setSubscribemodal(!subscribemodal)
         }}
       >
         <div>
           <ModalHeader
-            className="border-bottom-0"
+            className='border-bottom-0'
             toggle={() => {
-              setSubscribemodal(!subscribemodal);
+              setSubscribemodal(!subscribemodal)
             }}
           ></ModalHeader>
         </div>
-        <div className="modal-body">
-          <div className="text-center mb-4">
-            <div className="avatar-md mx-auto mb-4">
-              <div className="avatar-title bg-light  rounded-circle text-primary h1">
-                <i className="mdi mdi-email-open"></i>
-              </div>
-            </div>
+        <div className='modal-body'>
+          <div className='text-center mb-4'>
+            
 
-            <div className="row justify-content-center">
-              <div className="col-xl-10">
-                <h4 className="text-primary">Subscribe !</h4>
-                <p className="text-muted font-size-14 mb-4">
-                  Subscribe our newletter and get notification to stay update.
+            <div className='row justify-content-center'>
+              <div className='col-xl-10'>
+                <h4 className='text-primary'>Employees !</h4>
+                <p className='text-muted font-size-14 mb-4'>
+                  Please login to you account before making sale or changes in
+                  the products!
                 </p>
-
-                <div
-                  className="input-group rounded bg-light"
-                >
-                  <Input
-                    type="email"
-                    className="form-control bg-transparent border-0"
-                    placeholder="Enter Email address"
-                  />
-                  <Button color="primary" type="button" id="button-addon2">
-                    <i className="bx bxs-paper-plane"></i>
+                <div className='rounded bg-light text-center'>
+                  <Button color='primary' type='button' id='button-addon2'>
+                    Done
                   </Button>
                 </div>
               </div>
@@ -269,88 +261,88 @@ const Dashboard = props => {
 
       <Modal
         isOpen={modal}
-        role="dialog"
+        role='dialog'
         autoFocus={true}
         centered={true}
-        className="exampleModal"
-        tabIndex="-1"
+        className='exampleModal'
+        tabIndex='-1'
         toggle={() => {
-          setmodal(!modal);
+          setmodal(!modal)
         }}
       >
         <div>
           <ModalHeader
             toggle={() => {
-              setmodal(!modal);
+              setmodal(!modal)
             }}
           >
             Order Details
           </ModalHeader>
           <ModalBody>
-            <p className="mb-2">
-              Product id: <span className="text-primary">#SK2540</span>
+            <p className='mb-2'>
+              Product id: <span className='text-primary'>#SK2540</span>
             </p>
-            <p className="mb-4">
-              Billing Name: <span className="text-primary">Neal Matthews</span>
+            <p className='mb-4'>
+              Billing Name: <span className='text-primary'>Neal Matthews</span>
             </p>
 
-            <div className="table-responsive">
-              <Table className="table table-centered table-nowrap">
+            <div className='table-responsive'>
+              <Table className='table table-centered table-nowrap'>
                 <thead>
                   <tr>
-                    <th scope="col">Product</th>
-                    <th scope="col">Product Name</th>
-                    <th scope="col">Price</th>
+                    <th scope='col'>Product</th>
+                    <th scope='col'>Product Name</th>
+                    <th scope='col'>Price</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <th scope="row">
+                    <th scope='row'>
                       <div>
-                        <img src={modalimage1} alt="" className="avatar-sm" />
+                        <img src={modalimage1} alt='' className='avatar-sm' />
                       </div>
                     </th>
                     <td>
                       <div>
-                        <h5 className="text-truncate font-size-14">
+                        <h5 className='text-truncate font-size-14'>
                           Wireless Headphone (Black)
                         </h5>
-                        <p className="text-muted mb-0">$ 225 x 1</p>
+                        <p className='text-muted mb-0'>$ 225 x 1</p>
                       </div>
                     </td>
                     <td>$ 255</td>
                   </tr>
                   <tr>
-                    <th scope="row">
+                    <th scope='row'>
                       <div>
-                        <img src={modalimage2} alt="" className="avatar-sm" />
+                        <img src={modalimage2} alt='' className='avatar-sm' />
                       </div>
                     </th>
                     <td>
                       <div>
-                        <h5 className="text-truncate font-size-14">
+                        <h5 className='text-truncate font-size-14'>
                           Hoodie (Blue)
                         </h5>
-                        <p className="text-muted mb-0">$ 145 x 1</p>
+                        <p className='text-muted mb-0'>$ 145 x 1</p>
                       </div>
                     </td>
                     <td>$ 145</td>
                   </tr>
                   <tr>
-                    <td colSpan="2">
-                      <h6 className="m-0 text-end">Sub Total:</h6>
+                    <td colSpan='2'>
+                      <h6 className='m-0 text-end'>Sub Total:</h6>
                     </td>
                     <td>$ 400</td>
                   </tr>
                   <tr>
-                    <td colSpan="2">
-                      <h6 className="m-0 text-end">Shipping:</h6>
+                    <td colSpan='2'>
+                      <h6 className='m-0 text-end'>Shipping:</h6>
                     </td>
                     <td>Free</td>
                   </tr>
                   <tr>
-                    <td colSpan="2">
-                      <h6 className="m-0 text-end">Total:</h6>
+                    <td colSpan='2'>
+                      <h6 className='m-0 text-end'>Total:</h6>
                     </td>
                     <td>$ 400</td>
                   </tr>
@@ -360,10 +352,10 @@ const Dashboard = props => {
           </ModalBody>
           <ModalFooter>
             <Button
-              type="button"
-              color="secondary"
+              type='button'
+              color='secondary'
               onClick={() => {
-                setmodal(!modal);
+                setmodal(!modal)
               }}
             >
               Close
@@ -372,7 +364,7 @@ const Dashboard = props => {
         </div>
       </Modal>
     </React.Fragment>
-  );
+  )
 };
 
 Dashboard.propTypes = {

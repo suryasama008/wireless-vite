@@ -17,7 +17,7 @@ import { getUsers as onGetUsers } from "/src/store/contacts/actions"
 const ContactsGrid = () => {
 
   //meta title
-  document.title="User Grid | Skote - Vite React Admin & Dashboard Template";
+  document.title="User Grid | Wireless + - Vite React Admin & Dashboard Template";
 
   const dispatch = useDispatch()
 

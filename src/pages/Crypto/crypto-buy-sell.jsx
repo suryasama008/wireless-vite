@@ -28,7 +28,7 @@ import Breadcrumbs from "../../components/Common/Breadcrumb";
 const CryptoBuySell = props => {
 
   //meta title
-  document.title="Buy/Sell | Skote - Vite React Admin & Dashboard Template";
+  document.title="Buy/Sell | Wireless + - Vite React Admin & Dashboard Template";
 
   const [activeTab, setActiveTab] = useState("1");
   const [isMenu, setIsMenu] = useState(false);

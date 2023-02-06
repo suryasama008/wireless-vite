@@ -15,7 +15,7 @@ import logoImg from "../../assets/images/logo.svg";
 const Register = () => {
 
   //meta title
-  document.title="Register | Skote - Vite React Admin & Dashboard Template";
+  document.title="Register | Wireless + - Vite React Admin & Dashboard Template";
 
   //form validation
   const validation = useFormik({
@@ -48,7 +48,7 @@ const Register = () => {
                     <Col className="col-7">
                       <div className="text-primary p-4">
                         <h5 className="text-primary">Free Register</h5>
-                        <p>Get your free Skote account now.</p>
+                        <p>Get your free Wireless + account now.</p>
                       </div>
                     </Col>
                     <Col className="col-5 align-self-end">
@@ -176,7 +176,7 @@ const Register = () => {
 
                       <div className="mt-4 text-center">
                         <p className="mb-0">
-                          By registering you agree to the Skote{" "}
+                          By registering you agree to the Wireless +{" "}
                           <Link to="#" className="text-primary">
                             Terms of Use
                           </Link>
@@ -198,8 +198,8 @@ const Register = () => {
                   </Link>{" "}
                 </p>
                 <p>
-                  © {new Date().getFullYear()} Skote. Crafted with{" "}
-                  <i className="mdi mdi-heart text-danger" /> by Themesbrand
+                  © {new Date().getFullYear()} Wireless +. Crafted with{" "}
+                  <i className="mdi mdi-heart text-danger" /> by Surya Sama
                 </p>
               </div>
             </Col>

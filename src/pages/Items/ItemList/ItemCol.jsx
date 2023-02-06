@@ -41,6 +41,11 @@ const Model = (cell) => {
   return cell.value ? cell.value : ''
 }
 
+const UpdatedAt = (cell) => {
+  var date = new Date(cell.value.seconds * 1000 + cell.value.nanoseconds / 1000000);
+  return date.toLocaleDateString();
+}
+
 export {
   Store,
   Brand,
@@ -52,4 +57,5 @@ export {
   SellingPrice,
   Status,
   Condition,
+  UpdatedAt,
 }

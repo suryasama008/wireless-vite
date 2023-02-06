@@ -83,7 +83,7 @@ const productListvar = [
 const EcommerceCart = () => {
 
   //meta title
-  document.title="Cart | Skote - Vite React Admin & Dashboard Template";
+  document.title="Cart | Wireless + - Vite React Admin & Dashboard Template";
 
   const [productList, setproductList] = useState(productListvar);
 

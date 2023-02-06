@@ -15,7 +15,7 @@ import { Link } from "react-router-dom";
 const LockScreen = () => {
 
   //meta title
-  document.title="Lock Screen 2 | Skote - Vite React Admin & Dashboard Template";
+  document.title="Lock Screen 2 | Wireless + - Vite React Admin & Dashboard Template";
 
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -129,8 +129,8 @@ const LockScreen = () => {
                   </Link>{" "}
                 </p>
                 <p>
-                  © {(new Date().getFullYear())} Skote. Crafted with{" "}
-                  <i className="mdi mdi-heart text-danger" /> by Themesbrand
+                  © {(new Date().getFullYear())} Wireless +. Crafted with{" "}
+                  <i className="mdi mdi-heart text-danger" /> by Surya Sama
                 </p>
               </div>
             </Col>

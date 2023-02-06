@@ -17,6 +17,12 @@ const menuItems = [
       label: "Calendar",
       icon: "mdi-calendar-outline",
       link: "/calendar",
+  },
+  {
+    id: 'products',
+    label: 'Products',
+    icon: 'mdi mdi-cart-outline',
+    link: '/items',
     },
     {
       id: "email",

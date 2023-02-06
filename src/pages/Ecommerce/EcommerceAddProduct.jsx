@@ -22,7 +22,7 @@ import Breadcrumbs from "../../components/Common/Breadcrumb";
 const EcommerceAddProduct = () => {
   
   //meta title
-  document.title = "Add Product | Skote - Vite React Admin & Dashboard Template";
+  document.title = "Add Product | Wireless + - Vite React Admin & Dashboard Template";
 
   const [selectedFiles, setselectedFiles] = useState([])
 

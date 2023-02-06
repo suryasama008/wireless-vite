@@ -11,7 +11,7 @@ import smallImage from "../../assets/images/small/img-1.jpg";
 const UiPlaceholders = () => {
 
     //meta title
-    document.title = "Placeholders | Skote - Vite React Admin & Dashboard Template";
+    document.title = "Placeholders | Wireless + - Vite React Admin & Dashboard Template";
 
     return (    
         <React.Fragment>

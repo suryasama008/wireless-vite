@@ -59,7 +59,7 @@ const IconFontawesome = props => {
   })
 
    //meta title
-   document.title = "Font awesome | Skote - Vite React Admin & Dashboard Template";
+   document.title = "Font awesome | Wireless + - Vite React Admin & Dashboard Template";
 
   return (
     <React.Fragment>

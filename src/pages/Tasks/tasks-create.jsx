@@ -26,12 +26,24 @@ import Breadcrumbs from "/src/components/Common/Breadcrumb"
 const TasksCreate = () => {
 
   //meta title
-  document.title = "Create Task | Skote - Vite React Admin & Dashboard Template";
+  document.title = "Create order | Wireless + - Vite React Admin & Dashboard Template";
 
-  const inpRow = [{ name: "", file: "" }]
+  const inpRow = [{ type: "Privacy Tempered Glass", model: "Iphone 13 pro max" }, {
+    type: "Premium Tempered Glass",
+    model: "Iphone 12 pro"
+  }, {
+    type: "Punjab",
+    model: "Iphone 12 pro max"
+    },
+    {
+      type: "Ovo",
+      model: "Iphone 11",
+    },
+  ]
   const [startDate, setstartDate] = useState(new Date())
   const [endDate, setendDate] = useState(new Date())
   const [inputFields, setinputFields] = useState(inpRow)
+  const [count, setCount] = useState(2)
 
   const startDateChange = date => {
     setstartDate(date)
@@ -54,116 +66,123 @@ const TasksCreate = () => {
 
   return (
     <>
-      <div className="page-content">
+      <div className='page-content'>
         <Container fluid>
           {/* Render Breadcrumbs */}
-          <Breadcrumbs title="Tasks" breadcrumbItem="Create Task" />
+          <Breadcrumbs title='Orders' breadcrumbItem='Create Order' />
 
           <Row>
-            <Col lg="12">
+            <Col lg='12'>
               <Card>
                 <CardBody>
-                  <CardTitle className="mb-4">Create New Task</CardTitle>
-                  <form className="outer-repeater">
-                    <div data-repeater-list="outer-group" className="outer">
-                      <div data-repeater-item className="outer">
-                        <FormGroup className="mb-4" row>
+                  <CardTitle className='mb-4'>Create New Order</CardTitle>
+                  <form className='outer-repeater'>
+                    <div data-repeater-list='outer-group' className='outer'>
+                      <div data-repeater-item className='outer'>
+                        <FormGroup className='mb-4' row>
                           <Label
-                            htmlFor="taskname"
-                            className="col-form-label col-lg-2"
+                            htmlFor='taskname'
+                            className='col-form-label col-lg-2'
                           >
-                            Task Name
+                            order Name
                           </Label>
-                          <Col lg="10">
+                          <Col lg='10'>
                             <Input
-                              id="taskname"
-                              name="taskname"
-                              type="text"
-                              className="form-control"
-                              placeholder="Enter Task Name..."
-                            />
-                          </Col>
-                        </FormGroup>
-                        <FormGroup className="mb-4" row>
-                          <Label className="col-form-label col-lg-2">
-                            Task Description
-                          </Label>
-                          <Col lg="10">                           
-                            <CKEditor
-                              editor={ClassicEditor}
-                              data="<p>Hello from CKEditor 5!</p>"
-                              onReady={editor => {
-                                // You can store the "editor" and use when it is needed.
-                                // console.log('Editor is ready to use!', editor);
-                              }}
-                              onChange={(event, editor) => {
-                                const data = editor.getData();
-                              }}
+                              id='taskname'
+                              name='taskname'
+                              type='text'
+                              className='form-control'
+                              placeholder='Enter order Name...'
                             />
                           </Col>
                         </FormGroup>
 
-                        <FormGroup className="mb-4" row>
-                          <Label className="col-form-label col-lg-2">
-                            Task Date
+                        <FormGroup className='mb-4' row>
+                          <Label className='col-form-label col-lg-2'>
+                            order Date
                           </Label>
-                          <Col lg="10">
+                          <Col lg='10'>
                             <Row>
-                              <Col md={6} className="pr-0">
+                              <Col md={6} className='pr-0'>
                                 <DatePicker
-                                  className="form-control"
+                                  className='form-control'
                                   selected={startDate}
                                   onChange={startDateChange}
-                                />
-                              </Col>
-                              <Col md={6} className="pl-0">
-                                <DatePicker
-                                  className="form-control"
-                                  selected={endDate}
-                                  onChange={endDateChange}
                                 />
                               </Col>
                             </Row>
                           </Col>
                         </FormGroup>
 
-                        <div className="inner-repeater mb-4">
-                          <div className="inner form-group mb-0 row">
-                            <Label className="col-form-label col-lg-2">
-                              Add Team Member
+                        <div className='inner-repeater mb-4'>
+                          <div className='inner form-group mb-0 row'>
+                            <Label className='col-form-label col-lg-2'>
+                              Add Order Items
                             </Label>
                             <div
-                              className="inner col-lg-10 ml-md-auto"
-                              id="repeater"
+                              className='inner col-lg-10 ml-md-auto'
+                              id='repeater'
                             >
                               {inputFields.map((field, key) => (
                                 <div
                                   key={key}
-                                  id={"nested" + key}
-                                  className="mb-3 row align-items-center"
+                                  id={'nested' + key}
+                                  className='mb-3 row align-items-center'
                                 >
-                                  <Col md="6">
+                                  <Col md='4'>
                                     <input
-                                      type="text"
-                                      className="inner form-control"
-                                      defaultValue={field.name}
-                                      placeholder="Enter Name..."
+                                      type='text'
+                                      className='inner form-control'
+                                      defaultValue={field.type}
+                                      placeholder='Enter Name...'
                                     />
                                   </Col>
-                                  <Col md="4">
-                                    <div className="mt-4 mt-md-0">
-                                      <Input
-                                        type="file"
-                                        className="form-control"
-                                        defaultValue={field.file}
-                                      />
-                                    </div>
+                                  <Col md='3'>
+                                    <input
+                                      type='text'
+                                      className='inner form-control'
+                                      defaultValue={field.model}
+                                      placeholder='Enter Name...'
+                                    />
                                   </Col>
-                                  <Col md="2">
-                                    <div className="mt-2 mt-md-0 d-grid">
+                                  <div style={{ width: '150px' }}>
+                                    <div className='input-group'>
+                                      <div className='input-group-prepend'>
+                                        <button
+                                          type='button'
+                                          className='btn btn-primary'
+                                          onClick={() => {
+                                           setCount(count - 1)
+                                          }}
+                                        >
+                                          -
+                                        </button>
+                                      </div>
+                                      <Input
+                                        type='text'
+                                        value={count}
+                                        name='demo_vertical'
+                                        readOnly
+                                      />
+                                      <div className='input-group-append'>
+                                        <button
+                                          type='button'
+                                          className='btn btn-primary'
+                                          onClick={() => {
+                                            setCount(count + 1)
+                                          }}
+                                        >
+                                          +
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <Col md='2'>
+                                    <div className='mt-2 mt-md-0 d-grid'>
                                       <Button
-                                        color="primary"
-                                        className="inner"
+                                        color='primary'
+                                        className='inner'
                                         onClick={() => {
                                           handleRemoveFields(key)
                                         }}
@@ -177,44 +196,44 @@ const TasksCreate = () => {
                               ))}
                             </div>
                           </div>
-                          <Row className="justify-content-end">
-                            <Col lg="10">
+                          <Row className='justify-content-end'>
+                            <Col lg='10'>
                               <Button
-                                color="success"
-                                className="inner"
+                                color='success'
+                                className='inner'
                                 onClick={() => {
                                   handleAddFields()
                                 }}
                               >
-                                Add Number
+                                Add New Order
                               </Button>
                             </Col>
                           </Row>
                         </div>
-                        <FormGroup className="mb-4" row>
+                        <FormGroup className='mb-4' row>
                           <label
-                            htmlFor="taskbudget"
-                            className="col-form-label col-lg-2"
+                            htmlFor='taskbudget'
+                            className='col-form-label col-lg-2'
                           >
-                            Budget
+                            Order Instructions
                           </label>
-                          <div className="col-lg-10">
+                          <div className='col-lg-10'>
                             <Input
-                              id="taskbudget"
-                              name="taskbudget"
-                              type="text"
-                              placeholder="Enter Task Budget..."
-                              className="form-control"
+                              id='taskbudget'
+                              name='taskbudget'
+                              type='text'
+                              placeholder='Enter order Instructions...'
+                              className='form-control'
                             />
                           </div>
                         </FormGroup>
                       </div>
                     </div>
                   </form>
-                  <Row className="justify-content-end">
-                    <Col lg="10">
-                      <Button type="submit" color="primary">
-                        Create Task
+                  <Row className='justify-content-end'>
+                    <Col lg='10'>
+                      <Button type='submit' color='primary'>
+                        Create order
                       </Button>
                     </Col>
                   </Row>

@@ -16,7 +16,7 @@ import Breadcrumbs from "../../components/Common/Breadcrumb"
 const MapsLeaflet = () => {
 
   //meta title
-  document.title = "Leaflet Maps | Skote - Vite React Admin & Dashboard Template";
+  document.title = "Leaflet Maps | Wireless + - Vite React Admin & Dashboard Template";
 
   return (
     <React.Fragment>

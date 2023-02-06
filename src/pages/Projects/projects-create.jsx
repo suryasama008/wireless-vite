@@ -13,7 +13,7 @@ import Breadcrumbs from "../../components/Common/Breadcrumb";
 const ProjectsCreate = () => {
 
   //meta title
-  document.title="Create New Project | Skote - Vite React Admin & Dashboard Template";
+  document.title="Create New Project | Wireless + - Vite React Admin & Dashboard Template";
 
   const [startDate, setstartDate] = useState(new Date());
   const [endDate, setendDate] = useState(new Date());

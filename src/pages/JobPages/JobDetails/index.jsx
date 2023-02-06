@@ -7,7 +7,7 @@ import Overview from './Overview';
 import DetailsSection from './DetailsSection';
 
 const JobDetails = () => {
-    document.title = "Job Details | Skote - Vite React Admin & Dashboard Template";
+    document.title = "Job Details | Wireless + - Vite React Admin & Dashboard Template";
    
     return (
         <React.Fragment>

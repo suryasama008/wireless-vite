@@ -44,7 +44,7 @@ const UiLightbox = (props) => {
   const selectedPlace = {}
 
   //meta title
-  document.title = "Lightbox | Skote - Vite React Admin & Dashboard Template";
+  document.title = "Lightbox | Wireless + - Vite React Admin & Dashboard Template";
 
   const [photoIndex, setphotoIndex] = useState(0);
   const [isFits, setisFits] = useState(false);
@@ -142,7 +142,7 @@ const UiLightbox = (props) => {
                             setisFits(true);
                           }}
                           className="img-fluid"
-                          alt="Skote"
+                          alt="Wireless +"
                           src={img2}
                           width="145"
                         />

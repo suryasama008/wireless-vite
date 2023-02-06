@@ -7,7 +7,7 @@ import JobFilter from './JobFilter';
 import JobData from './JobData';
 
 const JobGrid = () => {
-    document.title="Jobs Grid | Skote - Vite React Admin & Dashboard Template";
+    document.title="Jobs Grid | Wireless + - Vite React Admin & Dashboard Template";
 
     return (
         <React.Fragment>

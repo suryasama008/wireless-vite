@@ -9,7 +9,7 @@ import logolight from "../../assets/images/logo-light.png"
 const ConfirmMail = () => {
 
   //meta title
-  document.title="Confirm Mail | Skote - Vite React Admin & Dashboard Template";
+  document.title="Confirm Mail | Wireless + - Vite React Admin & Dashboard Template";
 
   return (
     <React.Fragment>
@@ -67,8 +67,8 @@ const ConfirmMail = () => {
               </Card>
               <div className="mt-5 text-center">
                 <p>
-                  © {new Date().getFullYear()} Skote. Crafted with{" "}
-                  <i className="mdi mdi-heart text-danger"></i> by Themesbrand
+                  © {new Date().getFullYear()} Wireless +. Crafted with{" "}
+                  <i className="mdi mdi-heart text-danger"></i> by Surya Sama
                 </p>
               </div>
             </Col>

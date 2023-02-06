@@ -7,7 +7,7 @@ import error from "../../assets/images/error-img.png"
 
 const Pages500 = () => {
    //meta title
-   document.title = "500 Error Page | Skote - Vite React Admin & Dashboard Template";
+   document.title = "500 Error Page | Wireless + - Vite React Admin & Dashboard Template";
 
   return (
     <React.Fragment>

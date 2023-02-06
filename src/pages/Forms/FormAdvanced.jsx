@@ -129,7 +129,7 @@ const optionGroup2 = [
 const FormAdvanced = () => {
   //meta title
   document.title =
-    "Form Advanced | Skote - Vite React Admin & Dashboard Template";
+    "Form Advanced | Wireless + - Vite React Admin & Dashboard Template";
 
   const [sq1, setsq1] = useState(true);
   const [sq2, setsq2] = useState(true);

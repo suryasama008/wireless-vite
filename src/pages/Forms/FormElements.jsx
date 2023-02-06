@@ -17,7 +17,7 @@ import Breadcrumbs from "../../components/Common/Breadcrumb"
 const FormElements = () => {
 
   //meta title
-  document.title = "Form Elements | Skote - Vite React Admin & Dashboard Template"
+  document.title = "Form Elements | Wireless + - Vite React Admin & Dashboard Template"
 
   const [customchkPrimary, setcustomchkPrimary] = useState(true);
   const [customchkSuccess, setcustomchkSuccess] = useState(true);

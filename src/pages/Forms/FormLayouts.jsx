@@ -20,7 +20,7 @@ import Breadcrumbs from "../../components/Common/Breadcrumb";
 const FormLayouts = props => {
 
   //meta title
-  document.title = "Form Layouts | Skote - Vite React Admin & Dashboard Template";
+  document.title = "Form Layouts | Wireless + - Vite React Admin & Dashboard Template";
 
   return (
     <React.Fragment>

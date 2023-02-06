@@ -19,7 +19,7 @@ import Breadcrumbs from "/src/components/Common/Breadcrumb";
 const ProjectsList = () => {
 
   //meta title
-  document.title = "Project List | Skote - Vite React Admin & Dashboard Template";
+  document.title = "Project List | Wireless + - Vite React Admin & Dashboard Template";
 
   return (
     <React.Fragment>

@@ -65,148 +65,140 @@ const Header = props => {
   }
   return (
     <React.Fragment>
-      <header id="page-topbar">
-        <div className="navbar-header">
-          <div className="d-flex">
-            <div className="navbar-brand-box">
-              <Link to="/" className="logo logo-dark">
-                <span className="logo-sm">
-                  <img src={logo} alt="" height="22" />
-                </span>
-                <span className="logo-lg">
-                  <img src={logoDark} alt="" height="17" />
-                </span>
+      <header id='page-topbar'>
+        <div className='navbar-header'>
+          <div className='d-flex'>
+            <div className='navbar-brand-box'>
+              <Link to='/' className='logo logo-dark'>
+                <span className='logo-sm'>Wireless plus</span>
+                <span className='text-blue fs-2 text fw-1'>Wireless <span text-red fs-1 text>+</span> </span>
               </Link>
 
-              <Link to="/" className="logo logo-light">
-                <span className="logo-sm">
-                  <img src={logoLightSvg} alt="" height="22" />
+              <Link to='/' className='logo logo-light'>
+                <span className='logo-sm'>
+                  <img src={logoLightSvg} alt='' height='22' />
                 </span>
-                <span className="logo-lg">
-                  <img src={logoLight} alt="" height="19" />
+                <span className='logo-lg'>
+                  <img src={logoLight} alt='' height='19' />
                 </span>
               </Link>
             </div>
 
             <button
-              type="button"
-              className="btn btn-sm px-3 font-size-16 d-lg-none header-item"
-              data-toggle="collapse"
+              type='button'
+              className='btn btn-sm px-3 font-size-16 d-lg-none header-item'
+              data-toggle='collapse'
               onClick={() => {
-                props.toggleLeftmenu(!props.leftMenu);
+                props.toggleLeftmenu(!props.leftMenu)
               }}
-              data-target="#topnav-menu-content"
+              data-target='#topnav-menu-content'
             >
-              <i className="fa fa-fw fa-bars" />
+              <i className='fa fa-fw fa-bars' />
             </button>
 
-            <form className="app-search d-none d-lg-block">
-              <div className="position-relative">
+            <form className='app-search d-none d-lg-block'>
+              <div className='position-relative'>
                 <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Search..."
+                  type='text'
+                  className='form-control'
+                  placeholder='Search...'
                 />
-                <span className="bx bx-search-alt" />
+                <span className='bx bx-search-alt' />
               </div>
             </form>
 
             <Dropdown
-              className="dropdown-mega d-none d-lg-block ms-2"
+              className='dropdown-mega d-none d-lg-block ms-2'
               isOpen={menu}
               toggle={() => setMenu(!menu)}
             >
-              <DropdownToggle
-                className="btn header-item "
-                caret
-                tag="button"
-              >
-                {props.t("Mega Menu")} <i className="mdi mdi-chevron-down" />
+              <DropdownToggle className='btn header-item ' caret tag='button'>
+                {props.t('Mega Menu')} <i className='mdi mdi-chevron-down' />
               </DropdownToggle>
-              <DropdownMenu className="dropdown-megamenu">
-                <Row>   
+              <DropdownMenu className='dropdown-megamenu'>
+                <Row>
                   <Col sm={8}>
                     <Row>
                       <Col md={4}>
-                        <h5 className="font-size-14 mt-0">
-                          {props.t("UI Components")}
+                        <h5 className='font-size-14 mt-0'>
+                          {props.t('UI Components')}
                         </h5>
-                        <ul className="list-unstyled megamenu-list">
+                        <ul className='list-unstyled megamenu-list'>
                           <li>
-                            <Link to="#">{props.t("Lightbox")}</Link>
+                            <Link to='#'>{props.t('Lightbox')}</Link>
                           </li>
                           <li>
-                            <Link to="#">{props.t("Range Slider")}</Link>
+                            <Link to='#'>{props.t('Range Slider')}</Link>
                           </li>
                           <li>
-                            <Link to="#">{props.t("Sweet Alert")}</Link>
+                            <Link to='#'>{props.t('Sweet Alert')}</Link>
                           </li>
                           <li>
-                            <Link to="#">{props.t("Rating")}</Link>
+                            <Link to='#'>{props.t('Rating')}</Link>
                           </li>
                           <li>
-                            <Link to="#">{props.t("Forms")}</Link>
+                            <Link to='#'>{props.t('Forms')}</Link>
                           </li>
                           <li>
-                            <Link to="#">{props.t("Tables")}</Link>
+                            <Link to='#'>{props.t('Tables')}</Link>
                           </li>
                           <li>
-                            <Link to="#">{props.t("Charts")}</Link>
+                            <Link to='#'>{props.t('Charts')}</Link>
                           </li>
                         </ul>
                       </Col>
 
                       <Col md={4}>
-                        <h5 className="font-size-14 mt-0">
-                          {props.t("Applications")}
+                        <h5 className='font-size-14 mt-0'>
+                          {props.t('Applications')}
                         </h5>
-                        <ul className="list-unstyled megamenu-list">
+                        <ul className='list-unstyled megamenu-list'>
                           <li>
-                            <Link to="#">{props.t("Ecommerce")}</Link>
+                            <Link to='#'>{props.t('Ecommerce')}</Link>
                           </li>
                           <li>
-                            <Link to="#">{props.t("Calendar")}</Link>
+                            <Link to='#'>{props.t('Calendar')}</Link>
                           </li>
                           <li>
-                            <Link to="#">{props.t("Email")}</Link>
+                            <Link to='#'>{props.t('Email')}</Link>
                           </li>
                           <li>
-                            <Link to="#">{props.t("Projects")}</Link>
+                            <Link to='#'>{props.t('Projects')}</Link>
                           </li>
                           <li>
-                            <Link to="#">{props.t("Tasks")}</Link>
+                            <Link to='#'>{props.t('Tasks')}</Link>
                           </li>
                           <li>
-                            <Link to="#">{props.t("Contacts")}</Link>
+                            <Link to='#'>{props.t('Contacts')}</Link>
                           </li>
                         </ul>
                       </Col>
 
                       <Col md={4}>
-                        <h5 className="font-size-14 mt-0">
-                          {props.t("Extra Pages")}
+                        <h5 className='font-size-14 mt-0'>
+                          {props.t('Extra Pages')}
                         </h5>
-                        <ul className="list-unstyled megamenu-list">
+                        <ul className='list-unstyled megamenu-list'>
                           <li>
-                            <Link to="#">{props.t("Light Sidebar")}</Link>
+                            <Link to='#'>{props.t('Light Sidebar')}</Link>
                           </li>
                           <li>
-                            <Link to="#">{props.t("Compact Sidebar")}</Link>
+                            <Link to='#'>{props.t('Compact Sidebar')}</Link>
                           </li>
                           <li>
-                            <Link to="#">{props.t("Horizontal layout")}</Link>
+                            <Link to='#'>{props.t('Horizontal layout')}</Link>
                           </li>
                           <li>
-                            <Link to="#"> {props.t("Maintenance")}</Link>
+                            <Link to='#'> {props.t('Maintenance')}</Link>
                           </li>
                           <li>
-                            <Link to="#">{props.t("Coming Soon")}</Link>
+                            <Link to='#'>{props.t('Coming Soon')}</Link>
                           </li>
                           <li>
-                            <Link to="#">{props.t("Timeline")}</Link>
+                            <Link to='#'>{props.t('Timeline')}</Link>
                           </li>
                           <li>
-                            <Link to="#">{props.t("FAQs")}</Link>
+                            <Link to='#'>{props.t('FAQs')}</Link>
                           </li>
                         </ul>
                       </Col>
@@ -215,30 +207,30 @@ const Header = props => {
                   <Col sm={4}>
                     <Row>
                       <Col sm={6}>
-                        <h5 className="font-size-14 mt-0">
-                          {props.t("UI Components")}
+                        <h5 className='font-size-14 mt-0'>
+                          {props.t('UI Components')}
                         </h5>
-                        <ul className="list-unstyled megamenu-list">
+                        <ul className='list-unstyled megamenu-list'>
                           <li>
-                            <Link to="#">{props.t("Lightbox")}</Link>
+                            <Link to='#'>{props.t('Lightbox')}</Link>
                           </li>
                           <li>
-                            <Link to="#">{props.t("Range Slider")}</Link>
+                            <Link to='#'>{props.t('Range Slider')}</Link>
                           </li>
                           <li>
-                            <Link to="#">{props.t("Sweet Alert")}</Link>
+                            <Link to='#'>{props.t('Sweet Alert')}</Link>
                           </li>
                           <li>
-                            <Link to="#">{props.t("Rating")}</Link>
+                            <Link to='#'>{props.t('Rating')}</Link>
                           </li>
                           <li>
-                            <Link to="#">{props.t("Forms")}</Link>
+                            <Link to='#'>{props.t('Forms')}</Link>
                           </li>
                           <li>
-                            <Link to="#">{props.t("Tables")}</Link>
+                            <Link to='#'>{props.t('Tables')}</Link>
                           </li>
                           <li>
-                            <Link to="#">{props.t("Charts")}</Link>
+                            <Link to='#'>{props.t('Charts')}</Link>
                           </li>
                         </ul>
                       </Col>
@@ -247,8 +239,8 @@ const Header = props => {
                         <div>
                           <img
                             src={megamenuImg}
-                            alt=""
-                            className="img-fluid mx-auto d-block"
+                            alt=''
+                            className='img-fluid mx-auto d-block'
                           />
                         </div>
                       </Col>
@@ -259,36 +251,36 @@ const Header = props => {
             </Dropdown>
           </div>
 
-          <div className="d-flex">
-            <div className="dropdown d-inline-block d-lg-none ms-2">
+          <div className='d-flex'>
+            <div className='dropdown d-inline-block d-lg-none ms-2'>
               <button
-                type="button"
-                className="btn header-item noti-icon "
-                id="page-header-search-dropdown"
+                type='button'
+                className='btn header-item noti-icon '
+                id='page-header-search-dropdown'
                 onClick={() => setSearch(!isSearch)}
               >
-                <i className="mdi mdi-magnify" />
+                <i className='mdi mdi-magnify' />
               </button>
               <div
                 className={
                   isSearch
-                    ? "dropdown-menu dropdown-menu-lg dropdown-menu-end p-0 show"
-                    : "dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
+                    ? 'dropdown-menu dropdown-menu-lg dropdown-menu-end p-0 show'
+                    : 'dropdown-menu dropdown-menu-lg dropdown-menu-end p-0'
                 }
-                aria-labelledby="page-header-search-dropdown"
+                aria-labelledby='page-header-search-dropdown'
               >
-                <form className="p-3">
-                  <div className="form-group m-0">
-                    <div className="input-group">
+                <form className='p-3'>
+                  <div className='form-group m-0'>
+                    <div className='input-group'>
                       <input
-                        type="text"
-                        className="form-control"
-                        placeholder={props.t("Search") + "..."}
+                        type='text'
+                        className='form-control'
+                        placeholder={props.t('Search') + '...'}
                         aria-label="Recipient's username"
                       />
-                      <div className="input-group-append">
-                        <button className="btn btn-primary" type="submit">
-                          <i className="mdi mdi-magnify" />
+                      <div className='input-group-append'>
+                        <button className='btn btn-primary' type='submit'>
+                          <i className='mdi mdi-magnify' />
                         </button>
                       </div>
                     </div>
@@ -300,57 +292,57 @@ const Header = props => {
             <LanguageDropdown />
 
             <Dropdown
-              className="d-none d-lg-inline-block ms-1"
+              className='d-none d-lg-inline-block ms-1'
               isOpen={socialDrp}
               toggle={() => {
-                setsocialDrp(!socialDrp);
+                setsocialDrp(!socialDrp)
               }}
             >
               <DropdownToggle
-                className="btn header-item noti-icon "
+                className='btn header-item noti-icon '
                 caret
-                tag="button"
+                tag='button'
               >
-                <i className="bx bx-customize" />
+                <i className='bx bx-customize' />
               </DropdownToggle>
-              <DropdownMenu className="dropdown-menu-lg dropdown-menu-end">
-                <div className="px-lg-2">
-                  <Row className="no-gutters">
+              <DropdownMenu className='dropdown-menu-lg dropdown-menu-end'>
+                <div className='px-lg-2'>
+                  <Row className='no-gutters'>
                     <Col>
-                      <Link className="dropdown-icon-item" to="#">
-                        <img src={github} alt="Github" />
+                      <Link className='dropdown-icon-item' to='#'>
+                        <img src={github} alt='Github' />
                         <span>GitHub</span>
                       </Link>
                     </Col>
                     <Col>
-                      <Link className="dropdown-icon-item" to="#">
-                        <img src={bitbucket} alt="bitbucket" />
+                      <Link className='dropdown-icon-item' to='#'>
+                        <img src={bitbucket} alt='bitbucket' />
                         <span>Bitbucket</span>
                       </Link>
                     </Col>
                     <Col>
-                      <Link className="dropdown-icon-item" to="#">
-                        <img src={dribbble} alt="dribbble" />
+                      <Link className='dropdown-icon-item' to='#'>
+                        <img src={dribbble} alt='dribbble' />
                         <span>Dribbble</span>
                       </Link>
                     </Col>
                   </Row>
-                  <Row className="no-gutters">
+                  <Row className='no-gutters'>
                     <Col>
-                      <Link className="dropdown-icon-item" to="#">
-                        <img src={dropbox} alt="dropbox" />
+                      <Link className='dropdown-icon-item' to='#'>
+                        <img src={dropbox} alt='dropbox' />
                         <span>Dropbox</span>
                       </Link>
                     </Col>
                     <Col>
-                      <Link className="dropdown-icon-item" to="#">
-                        <img src={mail_chimp} alt="mail_chimp" />
+                      <Link className='dropdown-icon-item' to='#'>
+                        <img src={mail_chimp} alt='mail_chimp' />
                         <span>Mail Chimp</span>
                       </Link>
                     </Col>
                     <Col>
-                      <Link className="dropdown-icon-item" to="#">
-                        <img src={slack} alt="slack" />
+                      <Link className='dropdown-icon-item' to='#'>
+                        <img src={slack} alt='slack' />
                         <span>Slack</span>
                       </Link>
                     </Col>
@@ -359,16 +351,16 @@ const Header = props => {
               </DropdownMenu>
             </Dropdown>
 
-            <div className="dropdown d-none d-lg-inline-block ms-1">
+            <div className='dropdown d-none d-lg-inline-block ms-1'>
               <button
-                type="button"
-                className="btn header-item noti-icon "
+                type='button'
+                className='btn header-item noti-icon '
                 onClick={() => {
-                  toggleFullscreen();
+                  toggleFullscreen()
                 }}
-                data-toggle="fullscreen"
+                data-toggle='fullscreen'
               >
-                <i className="bx bx-fullscreen" />
+                <i className='bx bx-fullscreen' />
               </button>
             </div>
 
@@ -376,22 +368,22 @@ const Header = props => {
 
             <ProfileMenu />
 
-            <div className="dropdown d-inline-block">
+            <div className='dropdown d-inline-block'>
               <button
                 onClick={() => {
-                  props.showRightSidebarAction(!props.showRightSidebar);
+                  props.showRightSidebarAction(!props.showRightSidebar)
                 }}
-                type="button"
-                className="btn header-item noti-icon right-bar-toggle "
+                type='button'
+                className='btn header-item noti-icon right-bar-toggle '
               >
-                <i className="bx bx-cog bx-spin" />
+                <i className='bx bx-cog bx-spin' />
               </button>
             </div>
           </div>
         </div>
       </header>
     </React.Fragment>
-  );
+  )
 };
 
 Header.propTypes = {

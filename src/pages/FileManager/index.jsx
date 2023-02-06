@@ -13,7 +13,7 @@ import Storage from "./Storage";
 const Index = () => {
   //meta title
   document.title =
-    "File Manager | Skote - Vite React Admin & Dashboard Template";
+    "File Manager | Wireless + - Vite React Admin & Dashboard Template";
   return (
     <React.Fragment>
       <div className="page-content">

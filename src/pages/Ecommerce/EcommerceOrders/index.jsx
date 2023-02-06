@@ -51,7 +51,7 @@ import {
 function EcommerceOrder() {
 
   //meta title
-  document.title="Orders | Skote - Vite React Admin & Dashboard Template";
+  document.title="Orders | Wireless + - Vite React Admin & Dashboard Template";
 
   const [modal, setModal] = useState(false);
   const [modal1, setModal1] = useState(false);

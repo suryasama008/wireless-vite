@@ -30,7 +30,7 @@ const INIT_STATE = {
   layoutWidth: layoutWidthTypes.FLUID,
   leftSideBarTheme: leftSideBarThemeTypes.DARK,
   leftSideBarThemeImage: leftBarThemeImageTypes.NONE,
-  leftSideBarType: leftSidebarTypes.DEFAULT,
+  leftSideBarType: leftSidebarTypes.ICON,
   topbarTheme: topBarThemeTypes.LIGHT,
   isPreloader: false,
   showRightSidebar: false,

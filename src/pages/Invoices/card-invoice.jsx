@@ -40,7 +40,7 @@ const CardInvoice = ({ data }) => {
                     {data.founder}
                   </h5>
                   <Link to="#" className="text-muted">
-                    @Skote
+                    @Wireless +
                   </Link>
                 </div>
               </Col>

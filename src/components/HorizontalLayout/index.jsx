@@ -39,7 +39,7 @@ const Layout = (props) => {
     let currentage = title.charAt(1).toUpperCase() + title.slice(2)
 
     document.title =
-      currentage + " | Skote - Vite React Admin & Dashboard Template"
+      currentage + " | Wireless + - Vite React Admin & Dashboard Template"
   }, [props.location.pathname]);
  
   useEffect(() => {

@@ -19,7 +19,7 @@ import { Link } from "react-router-dom"
 const FormUpload = () => {
 
   //meta title
-  document.title = "Form File Upload | Skote - Vite React Admin & Dashboard Template"
+  document.title = "Form File Upload | Wireless + - Vite React Admin & Dashboard Template"
 
   const [selectedFiles, setselectedFiles] = useState([])
 

@@ -2,22 +2,9 @@ import React from "react";
 import ReactApexChart from "react-apexcharts";
 import getChartColorsArray from "../../../components/Common/ChartsDynamicColor";
 
-const Apaexlinecolumn = ({ dataColors }) => {
+const Apaexlinecolumn = ({ dataColors,series }) => {
   const apaexlineColumnColors = getChartColorsArray(dataColors);
-  const series = [
-    {
-      name: "Net Profit",
-      data: [46, 57, 59, 54, 62, 58, 64, 60, 66],
-    },
-    {
-      name: "Revenue",
-      data: [74, 83, 102, 97, 86, 106, 93, 114, 94],
-    },
-    {
-      name: "Free Cash Flow",
-      data: [37, 42, 38, 26, 47, 50, 54, 55, 43],
-    },
-  ];
+
   const options = {
     chart: {
       toolbar: {

@@ -57,7 +57,7 @@ import { useSelector, useDispatch } from "react-redux";
 const EmailInbox = props => {
 
   //meta title
-  document.title = "Inbox | Skote - Vite React Admin & Dashboard Template";
+  document.title = "Inbox | Wireless + - Vite React Admin & Dashboard Template";
 
   const dispatch = useDispatch();
 

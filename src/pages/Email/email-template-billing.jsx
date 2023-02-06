@@ -6,7 +6,7 @@ import Breadcrumbs from "../../components/Common/Breadcrumb";
 
 const EmailTemplateBilling = props => {
    //meta title
-   document.title="Billing Email | Skote - Vite React Admin & Dashboard Template";
+   document.title="Billing Email | Wireless + - Vite React Admin & Dashboard Template";
   return (
     <React.Fragment>
       <div className="page-content">
@@ -582,7 +582,7 @@ const EmailTemplateBilling = props => {
                                         align="center"
                                         valign="top"
                                       >
-                                        Skote Inc. 2896 Howell Rd,
+                                        Wireless + Inc. 2896 Howell Rd,
                                         Russellville, AR, 72823
                                       </td>
                                     </tr>
@@ -610,7 +610,7 @@ const EmailTemplateBilling = props => {
                                         }}
                                         valign="top"
                                       >
-                                        © {new Date().getFullYear()} Skote
+                                        © {new Date().getFullYear()} Wireless +
                                       </td>
                                     </tr>
                                   </tbody>

@@ -49,7 +49,7 @@ import {
 function JobList() {
 
     //meta title
-    document.title = "Jobs List | Skote - Vite React Admin & Dashboard Template";
+    document.title = "Jobs List | Wireless + - Vite React Admin & Dashboard Template";
 
     const [modal, setModal] = useState(false);
     const [isEdit, setIsEdit] = useState(false);

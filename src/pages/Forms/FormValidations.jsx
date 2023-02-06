@@ -25,7 +25,7 @@ import Breadcrumbs from "../../components/Common/Breadcrumb";
 const FormValidations = () => {
 
    //meta title
-   document.title="Form Validation | Skote - Vite React Admin & Dashboard Template";
+   document.title="Form Validation | Wireless + - Vite React Admin & Dashboard Template";
 
   // Form validation 
   const validation = useFormik({

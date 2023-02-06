@@ -43,8 +43,7 @@ const SalesAnalytics = ({ dataColors }) => {
                 <Col xs="4">
                   <div className="mt-4">
                     <p className="mb-2 text-truncate">
-                      <i className="mdi mdi-circle text-primary me-1" /> Product
-                      A
+                      <i className="mdi mdi-circle text-primary me-1" /> Apple Phones
                     </p>
                     <h5>$ 2,132</h5>
                   </div>
@@ -52,8 +51,7 @@ const SalesAnalytics = ({ dataColors }) => {
                 <Col xs="4">
                   <div className="mt-4">
                     <p className="mb-2 text-truncate">
-                      <i className="mdi mdi-circle text-success me-1" /> Product
-                      B
+                      <i className="mdi mdi-circle text-success me-1" /> Android Phones
                     </p>
                     <h5>$ 1,763</h5>
                   </div>
@@ -61,8 +59,7 @@ const SalesAnalytics = ({ dataColors }) => {
                 <Col xs="4">
                   <div className="mt-4">
                     <p className="mb-2 text-truncate">
-                      <i className="mdi mdi-circle text-danger me-1" /> Product
-                      C
+                      <i className="mdi mdi-circle text-danger me-1" /> Accessories
                     </p>
                     <h5>$ 973</h5>
                   </div>

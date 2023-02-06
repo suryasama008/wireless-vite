@@ -25,7 +25,7 @@ import Breadcrumbs from "../../components/Common/Breadcrumb"
 const UiDropdown = () => {
 
   //meta title
-  document.title = "Dropdowns | Skote - Vite React Admin & Dashboard Template";
+  document.title = "Dropdowns | Wireless + - Vite React Admin & Dashboard Template";
 
   const [singlebtn, setSinglebtn] = useState(false)
   const [singlebtn1, setSinglebtn1] = useState(false)

@@ -16,7 +16,7 @@ import { getInvoices as onGetInvoices } from "/src/store/actions"
 
 const InvoicesList = props => {
    //meta title
-   document.title="Invoice List | Skote - Vite React Admin & Dashboard Template";
+   document.title="Invoice List | Wireless + - Vite React Admin & Dashboard Template";
 
   const dispatch = useDispatch()
 

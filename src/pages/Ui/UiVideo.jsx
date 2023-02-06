@@ -6,7 +6,7 @@ import Breadcrumbs from "../../components/Common/Breadcrumb"
 
 const UiVideo = () => {
   //meta title
-  document.title = "Video | Skote - Vite React Admin & Dashboard Template";
+  document.title = "Video | Wireless + - Vite React Admin & Dashboard Template";
   return (
     <React.Fragment>
       <div className="page-content">

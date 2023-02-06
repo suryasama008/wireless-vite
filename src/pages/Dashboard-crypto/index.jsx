@@ -125,7 +125,7 @@ const Dashboard = () => {
 
   //meta title
   document.title =
-    "Crypto Dashboard | Skote - Vite React Admin & Dashboard Template";
+    "Crypto Dashboard | Wireless + - Vite React Admin & Dashboard Template";
 
   return (
     <React.Fragment>

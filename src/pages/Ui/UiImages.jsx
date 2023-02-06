@@ -23,7 +23,7 @@ import Breadcrumbs from "../../components/Common/Breadcrumb";
 const UiImages = () => {
 
   //meta title
-  document.title = "Images | Skote - Vite React Admin & Dashboard Template";
+  document.title = "Images | Wireless + - Vite React Admin & Dashboard Template";
 
   return (
     <React.Fragment>

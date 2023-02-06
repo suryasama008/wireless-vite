@@ -19,7 +19,7 @@ import Breadcrumbs from "../../components/Common/Breadcrumb";
 const CryptoLending = props => {
 
   //meta title
-  document.title="Lending | Skote - Vite React Admin & Dashboard Template";
+  document.title="Lending | Wireless + - Vite React Admin & Dashboard Template";
 
   const [assets] = useState([
     {

@@ -1,43 +1,43 @@
 import React from 'react';
 import { Badge } from 'reactstrap';
 
-const Pdate = (cell) => {
-    return cell.value ? cell.value : '';
+const Odate = (cell) => {
+    //convert new Date(cell.value) to your 21/12/2019 format
+
+    const date = new Date(cell.value);
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    return '' + day + '/' + month + '/' + year + ' '
 };
 
 const Type = (cell) => {
     return cell.value ? cell.value : '';
 };
 
-const Value = (cell) => {
+const Model = (cell) => {
     return cell.value ? cell.value : '';
 };
 
-const ValueinUSD = (cell) => {
+const Category = (cell) => {
     return cell.value ? cell.value : '';
 };
 
-const Status = (cell) => {
-    switch (cell.value) {
-        case "Completed":
-            return <Badge className="bg-success font-size-10">Completed</Badge>
-        case "Pending":
-            return <Badge className="bg-warning font-size-10">Pending</Badge>
-        case "Failed":
-            return <Badge className="bg-danger font-size-10">Failed</Badge>
-    }
+
+const Remarks = (cell) => {
+    return cell.value ? cell.value : '';
 };
 
-const Coin = (cell) => {
+const Qty = (cell) => {
     return cell.value ? cell.value : '';
 };
 
 
 export {
-    Pdate,
+    Odate,
     Type,
-    Value,
-    ValueinUSD,
-    Status,
-    Coin
+    Model,
+    Category,
+    Remarks,
+    Qty
 };

@@ -25,7 +25,7 @@ import classnames from "classnames";
 function UiTabsAccordions(props) {
 
   //meta title
-  document.title = "Tabs & Accordions | Skote - Vite React Admin & Dashboard Template";
+  document.title = "Tabs & Accordions | Wireless + - Vite React Admin & Dashboard Template";
 
   const [activeTab, setactiveTab] = useState("1");
   const [activeTab1, setactiveTab1] = useState("5");

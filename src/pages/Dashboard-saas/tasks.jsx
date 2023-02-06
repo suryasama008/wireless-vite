@@ -81,7 +81,7 @@ const TotalSellongProduct = props => {
                         <td>
                           <h5 className="text-truncate font-size-14 mb-1">
                             <Link to="#" className="text-dark">
-                              Skote Saas Dashboard
+                              Wireless + Saas Dashboard
                             </Link>
                           </h5>
                           <p className="text-muted mb-0">Assigned to Mark</p>
@@ -319,7 +319,7 @@ const TotalSellongProduct = props => {
                         <td>
                           <h5 className="text-truncate font-size-14 mb-1">
                             <Link to="#" className="text-dark">
-                              Skote Crypto Dashboard
+                              Wireless + Crypto Dashboard
                             </Link>
                           </h5>
                           <p className="text-muted mb-0">Assigned to Eric</p>
