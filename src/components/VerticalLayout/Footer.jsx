@@ -9,7 +9,7 @@ const Footer = () => {
           <Row>
             <Col md={6}>
               {new Date().getFullYear()} © Wireless + (Amin & Sohil) | Version
-              1.0.0
+              3.0.1(beta)
             </Col>
             <Col md={6}>
               <div className='text-sm-end d-none d-sm-block'>

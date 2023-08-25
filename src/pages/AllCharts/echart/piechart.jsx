@@ -2,7 +2,7 @@ import React from "react";
 import ReactEcharts from "echarts-for-react";
 import getChartColorsArray from "../../../components/Common/ChartsDynamicColor";
 
-const Pie = ({ dataColors }) => {
+const Pie = ({ dataColors, brandCount }) => {
   const PieEChartColors = getChartColorsArray(dataColors);
   const options = {
     toolbox: {
@@ -13,9 +13,9 @@ const Pie = ({ dataColors }) => {
       formatter: "{a} <br/>{b} : {c} ({d}%)",
     },
     legend: {
-      orient: "vertical",
+      orient: "horizontal",
       left: "left",
-      data: ["Laptop", "Tablet", "Mobile", "Others", "Desktop"],
+      data: ["APPLE", "SAMSUNG", "GOOGLE", "ZTE", "ALCATEL", "OTHERS", "SERVICE PHONE"],
       textStyle: {
         color: ["#8791af"],
       },
@@ -23,17 +23,11 @@ const Pie = ({ dataColors }) => {
     color: PieEChartColors,
     series: [
       {
-        name: "Total sales",
+        name: "Total Count",
         type: "pie",
         radius: "55%",
         center: ["50%", "60%"],
-        data: [
-          { value: 335, name: "Laptop" },
-          { value: 310, name: "Tablet" },
-          { value: 234, name: "Mobile" },
-          { value: 135, name: "Others" },
-          { value: 1548, name: "Desktop" },
-        ],
+        data: brandCount,
         itemStyle: {
           emphasis: {
             shadowBlur: 10,

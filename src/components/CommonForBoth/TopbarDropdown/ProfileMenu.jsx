@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useSelector } from 'react-redux'
+
 import PropTypes from "prop-types";
 import {
   Dropdown,
@@ -22,20 +24,27 @@ const ProfileMenu = (props) => {
 
   const [username, setusername] = useState("Admin");
 
+  // useEffect(() => {
+  //   if (localStorage.getItem("authUser")) {
+  //     if (import.meta.env.VITE_APP_DEFAULTAUTH === "firebase") {
+  //       const obj = JSON.parse(localStorage.getItem("authUser"));
+  //       setusername(obj.displayName);
+  //     } else if (
+  //       import.meta.env.VITE_APP_DEFAULTAUTH === "fake" ||
+  //       import.meta.env.VITE_APP_DEFAULTAUTH === "jwt"
+  //     ) {
+  //       const obj = JSON.parse(localStorage.getItem("authUser"));
+  //       setusername(obj.username);
+  //     }
+  //   }
+  // }, [props.success]);
+  const user = useSelector(state => state.users.user)
+
   useEffect(() => {
-    if (localStorage.getItem("authUser")) {
-      if (import.meta.env.VITE_APP_DEFAULTAUTH === "firebase") {
-        const obj = JSON.parse(localStorage.getItem("authUser"));
-        setusername(obj.displayName);
-      } else if (
-        import.meta.env.VITE_APP_DEFAULTAUTH === "fake" ||
-        import.meta.env.VITE_APP_DEFAULTAUTH === "jwt"
-      ) {
-        const obj = JSON.parse(localStorage.getItem("authUser"));
-        setusername(obj.username);
-      }
+    if (user) {
+      setusername(user.store)
     }
-  }, [props.success]);
+  }, [user])
 
   return (
     <React.Fragment>
@@ -49,37 +58,14 @@ const ProfileMenu = (props) => {
           id="page-header-user-dropdown"
           tag="button"
         >
-          <img
-            className="rounded-circle header-profile-user"
-            src={user1}
-            alt="Header Avatar"
-          />
           <span className="d-none d-xl-inline-block ms-2 me-1">{username}</span>
           <i className="mdi mdi-chevron-down d-none d-xl-inline-block" />
         </DropdownToggle>
         <DropdownMenu className="dropdown-menu-end">
-          <DropdownItem tag="a" href="/profile">
-            {" "}
-            <i className="bx bx-user font-size-16 align-middle me-1" />
-            {props.t("Profile")}{" "}
-          </DropdownItem>
-          <DropdownItem tag="a" href="/crypto-wallet">
-            <i className="bx bx-wallet font-size-16 align-middle me-1" />
-            {props.t("My Wallet")}
-          </DropdownItem>
-          <DropdownItem tag="a" href="#">
-            <span className="badge bg-success float-end">11</span>
-            <i className="bx bx-wrench font-size-16 align-middle me-1" />
-            {props.t("Settings")}
-          </DropdownItem>
-          <DropdownItem tag="a" href="auth-lock-screen">
-            <i className="bx bx-lock-open font-size-16 align-middle me-1" />
-            {props.t("Lock screen")}
-          </DropdownItem>
           <div className="dropdown-divider" />
           <Link to="/logout" className="dropdown-item">
             <i className="bx bx-power-off font-size-16 align-middle me-1 text-danger" />
-            <span>{props.t("Logout")}</span>
+            <span>Logout</span>
           </Link>
         </DropdownMenu>
       </Dropdown>
@@ -87,16 +73,6 @@ const ProfileMenu = (props) => {
   );
 };
 
-ProfileMenu.propTypes = {
-  success: PropTypes.any,
-  t: PropTypes.any,
-};
 
-const mapStatetoProps = (state) => {
-  const { error, success } = state.Profile;
-  return { error, success };
-};
+export default ProfileMenu
 
-export default withRouter(
-  connect(mapStatetoProps, {})(withTranslation()(ProfileMenu))
-);

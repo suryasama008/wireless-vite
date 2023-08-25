@@ -25,7 +25,6 @@ const UiButtons = () => {
       <div className="page-content">
         <Container fluid={true}>
           <Breadcrumbs title="UI Elements" breadcrumbItem="Buttons" />
-
           <Row>
             <Col lg={6}>
               <Card>
@@ -662,7 +661,7 @@ const UiButtons = () => {
             <Col lg={6}>
               <Card>
                 <CardBody>
-                  <CardTitle>Checkbox & Radio Buttons</CardTitle>
+                  <CardTitle></CardTitle>
                   <p className="card-title-desc">
                     Bootstrap’s{" "}
                     <code className="highlighter-rouge">.button</code> styles

@@ -1,195 +1,209 @@
-import PropTypes from "prop-types";
-import React from "react";
+import PropTypes from 'prop-types'
+import React,{useState} from 'react'
 
-import { Row, Col, CardBody, Card, Alert, Container, Form, Input, FormFeedback, Label } from "reactstrap";
-
+import {
+  Row,
+  Col,
+  CardBody,
+  Card,
+  Alert,
+  Container,
+  Form,
+  Input,
+  FormFeedback,
+  Label,
+} from 'reactstrap'
+import logodark from '../../assets/images/logo-dark.png'
+import logolight from '../../assets/images/logo-light.png'
+import CarouselPage from '../AuthenticationInner/CarouselPage'
 //redux
-import { useSelector, useDispatch } from "react-redux";
-
-import { withRouter, Link } from "react-router-dom";
+import { useSelector, useDispatch } from 'react-redux'
+import logoLightPng from '../../assets/images/logo-light.png'
+import { withRouter, Link } from 'react-router-dom'
 
 // Formik validation
-import * as Yup from "yup";
-import { useFormik } from "formik";
+import * as Yup from 'yup'
+import { useFormik } from 'formik'
 
 // actions
-import { loginUser } from "../../store/actions";
+import { loginUser } from '../../store/actions'
 
 // import images
-import profile from "../../assets/images/profile-img.png";
-import logo from "../../assets/images/logo.svg";
+import profile from '../../assets/images/profile-img.png'
+import logo from '../../assets/images/logo.svg'
 
-const Login = props => {
+const Login = (props) => {
   //meta title
-  document.title = "Login | Wireless + - Vite React Admin & Dashboard Template";
-  const dispatch = useDispatch();
+  document.title = 'Login | Skote - Vite React Admin & Dashboard Template'
 
-  const validation = useFormik({
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+   const [passwordShow, setPasswordShow] = useState(false)
+  const [show, setShow] = useState(false);
+
+  const dispatch = useDispatch()
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    const user = { email, password }
+    dispatch(loginUser(user, props.history))
+  }
+
+  // const { error } = useSelector((state) => ({
+  //   error: state.Login.error,
+  // }))
+
+   // Form validation 
+   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
 
     initialValues: {
-      email: "admin@themesbrand.com" || '',
-      password: "123456" || '',
+      email:'bccll@wirelessplus.com', 
+      password: '',
     },
     validationSchema: Yup.object({
-      email: Yup.string().required("Please Enter Your Email"),
+      email: Yup.string().required("Please Enter Your username"),
       password: Yup.string().required("Please Enter Your Password"),
     }),
     onSubmit: (values) => {
-      dispatch(loginUser(values, props.history));
+      console.log("values", values);
+      const user = { email, password }
+      dispatch(loginUser(values, props.history))
     }
   });
 
-  const { error } = useSelector(state => ({
-    error: state.Login.error,
-  }));
-
   return (
     <React.Fragment>
-
-      <div className="home-btn d-none d-sm-block">
-        <Link to="/" className="text-dark">
-          <i className="bx bx-home h2" />
-        </Link>
-      </div>
-      <div className="account-pages my-5 pt-sm-5">
-        <Container>
-          <Row className="justify-content-center">
-            <Col md={8} lg={6} xl={5}>
-              <Card className="overflow-hidden">
-                <div className="bg-primary bg-soft">
-                  <Row>
-                    <Col xs={7}>
-                      <div className="text-primary p-4">
-                        <h5 className="text-primary">Welcome Back !</h5>
-                        <p>Sign in to continue to Wireless +.</p>
-                      </div>
-                    </Col>
-                    <Col className="col-5 align-self-end">
-                      <img src={profile} alt="" className="img-fluid" />
-                    </Col>
-                  </Row>
-                </div>
-                <CardBody className="pt-0">
-                  <div>
-                    <Link to="/" className="auth-logo-light">
-                      <div className="avatar-md profile-user-wid mb-4">
-                        <span className="avatar-title rounded-circle bg-light">
-                          <img
-                            src={logo}
-                            alt=""
-                            className="rounded-circle"
-                            height="34"
-                          />
-                        </span>
-                      </div>
-                    </Link>
-                  </div>
-                  <div className="p-2">
-                    <Form
-                      className="form-horizontal"
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        validation.handleSubmit();
-                        return false;
-                      }}
-                    >
-                      {error ? <Alert color="danger">{error}</Alert> : null}
-
-                      <div className="mb-3">
-                        <Label className="form-label">Email</Label>
-                        <Input
-                          name="email"
-                          className="form-control"
-                          placeholder="Enter email"
-                          type="email"
-                          onChange={validation.handleChange}
-                          onBlur={validation.handleBlur}
-                          value={validation.values.email || ""}
-                          invalid={
-                            validation.touched.email && validation.errors.email ? true : false
-                          }
-                        />
-                        {validation.touched.email && validation.errors.email ? (
-                          <FormFeedback type="invalid">{validation.errors.email}</FormFeedback>
-                        ) : null}
+      <div>
+        <Container fluid className='p-0'>
+          <Row className='g-0'>
+            <CarouselPage />
+            <Col xl={3}>
+              <div className='auth-full-page-content p-md-5 p-4'>
+                <div className='w-100'>
+                  <div className='d-flex flex-column h-100'>
+                    <div className='my-auto'>
+                      <div>
+                        <h5 className='text-primary'>Welcome Back !</h5>
+                        <p className='text-muted'>
+                          Sign in to continue to Wireless +.
+                        </p>
                       </div>
 
-                      <div className="mb-3">
+                      <div className='mt-4'>
+                        <Form
+                          className='form-horizontal'
+                          onSubmit={(e) => {
+                            e.preventDefault()
+                            validation.handleSubmit()
+                            return false
+                          }}
+                        >
+                          <div className='mb-3'>
+                            <Label className='form-label'>Username</Label>
+                            <select name="email" value={validation.values.email} className="form-select" onChange={validation.handleChange}>
+                              <option value="bccll@wirelessplus.com">BCC LL</option>
+                              <option value="bccul@wirelessplus.com">BCC UL</option>
+                              <option value="emtc@wirelessplus.com">EMTC</option>
+                              <option value="emtccart@wirelessplus.com">EMTC CART</option>
+                              <option value="squareone@wirelessplus.com">SQUARE ONE</option>
+                              <option value="tp1@wirelessplus.com">TP1</option>
+                              <option value="amin@wirelessplus.com">AMIN</option>
+                              <option value="sohil@wirelessplus.com">SOHIL</option>
+                              <option value="admin@wirelessplus.com">ADMIN</option>
+                          </select>
+                          </div>
+
+                          <div className='mb-3'>
+                            <div className='float-end'>
+                              <Link
+                                to='/auth-recoverpw-2'
+                                className='text-muted'
+                              >
+                                Forgot password?
+                              </Link>
+                            </div>
+                            <div className="mb-3">
                         <Label className="form-label">Password</Label>
-                        <Input
-                          name="password"
-                          value={validation.values.password || ""}
-                          type="password"
-                          placeholder="Enter Password"
-                          onChange={validation.handleChange}
-                          onBlur={validation.handleBlur}
-                          invalid={
-                            validation.touched.password && validation.errors.password ? true : false
-                          }
-                        />
+                        <div className="input-group auth-pass-inputgroup">
+                          <Input
+                            name="password"
+                            value={validation.values.password || ""}
+                            type={show ? "text" : "password"}
+                            placeholder="Enter Password"
+                            onChange={validation.handleChange}
+                            onBlur={validation.handleBlur}
+                            invalid={validation.touched.password && validation.errors.password ? true : undefined}
+
+                          />
+                          <button onClick={() => setShow(!show)} className="btn btn-light " type="button" id="password-addon">
+                            <i className="mdi mdi-eye-outline"></i></button>
+                        </div>
                         {validation.touched.password && validation.errors.password ? (
                           <FormFeedback type="invalid">{validation.errors.password}</FormFeedback>
                         ) : null}
                       </div>
+                          </div>
 
-                      <div className="form-check">
-                        <input
-                          type="checkbox"
-                          className="form-check-input"
-                          id="customControlInline"
-                        />
-                        <label
-                          className="form-check-label"
-                          htmlFor="customControlInline"
-                        >
-                          Remember me
-                        </label>
-                      </div>
+                          <div className='form-check'>
+                            <Input
+                              type='checkbox'
+                              className='form-check-input'
+                              id='auth-remember-check'
+                            />
+                            <label
+                              className='form-check-label'
+                              htmlFor='auth-remember-check'
+                            >
+                              Remember me
+                            </label>
+                          </div>
 
-                      <div className="mt-3 d-grid">
-                        <button
-                          className="btn btn-primary btn-block"
-                          type="submit"
-                        >
-                          Log In
-                        </button>
-                      </div>
+                          <div className='mt-3 d-grid'>
+                            <button
+                              className='btn btn-primary btn-block '
+                              type='submit'
+                              // onClick={(e) => handleSubmit(e)}
+                            >
+                              Log In
+                            </button>
+                          </div>
+                        </Form>
 
-                      <div className="mt-4 text-center">
-                        <Link to="/forgot-password" className="text-muted">
-                          <i className="mdi mdi-lock me-1" />
-                          Forgot your password?
-                        </Link>
+                        <div className='mt-5 text-center'>
+                          <p>
+                            Don&apos;t have an account ?
+                            <Link
+                              to='pages-register-2'
+                              className='fw-medium text-primary'
+                            >
+                              Signup now
+                            </Link>
+                          </p>
+                        </div>
                       </div>
-                    </Form>
+                    </div>
+
+                    <div className='mt-4 mt-md-5 text-center'>
+                      <p className='mb-0'>
+                        © {new Date().getFullYear()} Wireless +. Crafted by
+                        Surya Sama
+                      </p>
+                    </div>
                   </div>
-                </CardBody>
-              </Card>
-              <div className="mt-5 text-center">
-                <p>
-                  Don&#39;t have an account ?{" "}
-                  <Link to="/register" className="fw-medium text-primary">
-                    {" "}
-                    Signup now{" "}
-                  </Link>{" "}
-                </p>
-                <p>
-                  © {new Date().getFullYear()} Wireless +. Crafted with{" "}
-                  <i className="mdi mdi-heart text-danger" /> by Surya Sama
-                </p>
+                </div>
               </div>
             </Col>
           </Row>
         </Container>
       </div>
     </React.Fragment>
-  );
-};
+  )
+}
 
-export default withRouter(Login);
+export default withRouter(Login)
 
 Login.propTypes = {
   history: PropTypes.object,
-};
+}

@@ -3,11 +3,6 @@ import { combineReducers } from "redux"
 // Front
 import Layout from "./layout/reducer"
 
-// Authentication
-import Login from "./auth/login/reducer"
-import Account from "./auth/register/reducer"
-import ForgetPassword from "./auth/forgetpwd/reducer"
-import Profile from "./auth/profile/reducer"
 
 // Inventory Items
 import ItemReducer from "./items/reducer"
@@ -49,13 +44,24 @@ import Dashboard from "./dashboard/reducer";
 //Dasboard saas
 import DashboardSaas from "./dashboard-saas/reducer";
 
+//models
+import models from "./models/reducer";
+
+//addValues
+import addValues from "./addValues/reducer";
+
+//login
+import login from "./auth/login/reducer";
+
+//users
+import users from "./users/reducer"
+
+//orders
+import orders from "./orders/reducer"
+
 const rootReducer = combineReducers({
   // public
   Layout,
-  Login,
-  Account,
-  ForgetPassword,
-  Profile,
   ecommerce,
   calendar,
   chat,
@@ -69,6 +75,11 @@ const rootReducer = combineReducers({
   Dashboard,
   DashboardSaas,
   ItemReducer,
+  models,
+  addValues,
+  login,
+  users,
+  orders,
 })
 
 export default rootReducer

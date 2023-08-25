@@ -9,6 +9,7 @@ import {
   DropdownMenu,
   DropdownItem,
 } from "reactstrap"
+import CardWelcome from "./card-welcome"
 
 //Import Images
 import avatar1 from "../../assets/images/jobs.png"
@@ -16,27 +17,34 @@ import avatar1 from "../../assets/images/jobs.png"
 function CardUser(props) {
   const [settingsMenu, setSettingsMenu] = useState(false)
   //Setting Menu
-  const { items } = props
-  const store = "EMTC"
+  const { items,store} = props
 
   //category of Accesssories
-  
-  const tabletCount = items.filter((item) => item.category === "Tablets").length
-  const accessoryCount = items.filter((item) => {
-    if ((!item.storage && item.status === "IN STOCK")){
+  // console.log(items)
+  // const tabletCount = items.filter((item) => item.category === "Tablets").length
+  const tabletCount = items.filter((item) => {
+    if (item.category === 'Tablets' && item.status === 'IN STOCK' && item.store === store) {
       return item
     }
   }).length
-  const phoneCount = items.filter((item) => item.status !== "SOLD").length - tabletCount - accessoryCount
+  const accessoryCount = items.filter((item) => {
+    if (item.category === 'Accessories' && item.status === 'IN STOCK' && item.store === store) {
+      return item
+    }
+  }).length
+  const phoneCount = items.filter((item) => {
+    if (item.status === 'IN STOCK' && item.store === store) {
+      return item
+    }
+  }).length - tabletCount - accessoryCount
 
   return (
     <React.Fragment>
       <Row>
-        <Col lg='12'>
-          <Card>
+          <Card >
             <CardBody>
-              <Row>
-                <Col lg='4'>
+              <Row className="d-flex justify-between">
+                <Col lg='8'>
                   <div className='d-flex'>
                     <div className='me-3'>
                       <img
@@ -48,67 +56,17 @@ function CardUser(props) {
                     <div className='flex-grow-1 align-self-center'>
                       <div className='text-muted'>
                         <p className='mb-2'>Welcome to Store Dashboard</p>
-                        <h5 className='mb-1'>EMTC</h5>
+                        <h5 className='mb-1'>{store}</h5>
                       </div>
                     </div>
                   </div>
                 </Col>
-
-                <Col lg='4' className='align-self-center'>
-                  <div className='text-lg-center mt-4 mt-lg-0'>
-                    <Row>
-                      <Col xs='4'>
-                        <div>
-                          <p className='text-muted text-truncate mb-2'>
-                            Phones
-                          </p>
-                          <h5 className='mb-0'>{phoneCount}</h5>
-                        </div>
-                      </Col>
-                      <Col xs='4'>
-                        <div>
-                          <p className='text-muted text-truncate mb-2'>
-                            Accesssories
-                          </p>
-                          <h5 className='mb-0'>{accessoryCount}</h5>
-                        </div>
-                      </Col>
-                      <Col xs='4'>
-                        <div>
-                          <p className='text-muted text-truncate mb-2'>
-                            Tablets
-                          </p>
-                          <h5 className='mb-0'>{tabletCount}</h5>
-                        </div>
-                      </Col>
-                    </Row>
-                  </div>
-                </Col>
-
-                <Col lg='4' className='d-none d-lg-block'>
-                  <div className='clearfix mt-4 mt-lg-0'>
-                    <Dropdown
-                      isOpen={settingsMenu}
-                      toggle={() => {
-                        setSettingsMenu(!settingsMenu)
-                      }}
-                      className='float-end'
-                    >
-                      <DropdownToggle tag='button' className='btn btn-primary'>
-                        <i className='bx bxs-cog align-middle me-1' /> Setting
-                      </DropdownToggle>
-                      <DropdownMenu className='dropdown-menu-end'>
-                        <DropdownItem href='#'>Action</DropdownItem>
-                        <DropdownItem href='#'>Another action</DropdownItem>
-                        <DropdownItem href='#'>Something else</DropdownItem>
-                      </DropdownMenu>
-                    </Dropdown>
-                  </div>
+                <Col lg='4' className="mt-3 d-flex justify-content-end">
+                 <CardWelcome />
                 </Col>
               </Row>
             </CardBody>
           </Card>
-        </Col>
       </Row>
     </React.Fragment>
   )

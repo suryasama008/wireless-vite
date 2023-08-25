@@ -39,7 +39,6 @@ const LatestTranaction = props => {
 
   const columns = useMemo(
     () => [
-    
       {
         Header: 'Model',
         accessor: 'model',
@@ -65,7 +64,7 @@ const LatestTranaction = props => {
         },
       },
       {
-        Header: 'Stores',
+        Header: 'Stores(New, Used)',
         accessor: 'store',
         filterable: true,
         Cell: (cellProps) => {
@@ -78,23 +77,6 @@ const LatestTranaction = props => {
         filterable: true,
         Cell: (cellProps) => {
           return <Total {...cellProps} />
-        },
-      },
-      {
-        Header: 'View Details',
-        disableFilters: true,
-        accessor: 'view',
-        Cell: (cellProps) => {
-          return (
-            <Button
-              type='button'
-              color='primary'
-              className='btn-sm btn-rounded'
-              onClick={toggleViewModal}
-            >
-              View Details
-            </Button>
-          )
         },
       },
     ],
@@ -111,17 +93,16 @@ const LatestTranaction = props => {
 
   return (
     <React.Fragment>
-      <EcommerceOrdersModal isOpen={modal1} toggle={toggleViewModal} />
       <Card>
         <CardBody>
-          <div className='mb-4 h4 card-title'>Latest Transaction</div>
+          <div className='mb-4 h4 card-title'>ALL STORE PHONES</div>
           <TableContainer
             columns={columns}
             data={itemList}
             isGlobalFilter={true}
             isAddOptions={false}
             isItemListGlobalFilter={true}
-            customPageSize={6}
+            customPageSize={50}
           />
         </CardBody>
       </Card>

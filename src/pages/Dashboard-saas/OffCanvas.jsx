@@ -26,10 +26,9 @@ const OffCanvas = ({ isRight, toggleRightCanvas, searchResults }) => {
     <div>
       <Offcanvas isOpen={isRight} direction='end' toggle={toggleRightCanvas}>
         <OffcanvasHeader toggle={toggleRightCanvas}>
-          Offcanvas Right
+          Product Details
         </OffcanvasHeader>
               <ProductSell searchResults={searchResults} isOffCanvas = "offCanvas"/>
-              {console.log(searchResults?.price)}
       </Offcanvas>
     </div>
   )

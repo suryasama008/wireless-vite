@@ -1,30 +1,30 @@
 import PropTypes from 'prop-types'
-import React from "react"
-
-import { Switch, BrowserRouter as Router } from "react-router-dom"
-import { connect } from "react-redux"
+import React from 'react'
+import './App.css'
+import { Switch, BrowserRouter as Router } from 'react-router-dom'
+import { connect } from 'react-redux'
 
 // Import Routes all
-import { authProtectedRoutes,publicRoutes } from "./routes"
+import { authProtectedRoutes, publicRoutes } from './routes'
 
 // Import all middleware
-import Authmiddleware from "./routes/route"
+import Authmiddleware from './routes/route'
 
 // layouts Format
-import VerticalLayout from "./components/VerticalLayout/"
-import HorizontalLayout from "./components/HorizontalLayout/"
-import NonAuthLayout from "./components/NonAuthLayout"
+import VerticalLayout from './components/VerticalLayout/'
+import HorizontalLayout from './components/HorizontalLayout/'
+import NonAuthLayout from './components/NonAuthLayout'
 
 // Import scss
-import "./assets/scss/theme.scss"
+import './assets/scss/theme.scss'
 
 // Import Firebase Configuration file
 // import { initFirebaseBackend } from "./helpers/firebase_helper"
 
-import fakeBackend from "/src/helpers/AuthType/fakeBackend";
+import fakeBackend from '/src/helpers/AuthType/fakeBackend'
 
 // Activating fake backend
-fakeBackend();
+fakeBackend()
 
 // const firebaseConfig = {
 //   apiKey: import.meta.env.VITE_APP_APIKEY,
@@ -40,12 +40,11 @@ fakeBackend();
 // init firebase backend
 // initFirebaseBackend(firebaseConfig)
 
-const App = props => {
-
+const App = (props) => {
   function getLayout() {
     let layoutCls = VerticalLayout
     switch (props.layout.layoutType) {
-      case "horizontal":
+      case 'horizontal':
         layoutCls = HorizontalLayout
         break
       default:
@@ -54,10 +53,11 @@ const App = props => {
     }
     return layoutCls
   }
-                
+
   const Layout = getLayout()
   return (
     <React.Fragment>
+    <div >
       <Router>
         <Switch>
           {publicRoutes.map((route, idx) => (
@@ -70,28 +70,29 @@ const App = props => {
               exact
             />
           ))}
-
+  
           {authProtectedRoutes.map((route, idx) => (
             <Authmiddleware
               path={route.path}
               layout={Layout}
               component={route.component}
               key={idx}
-              isAuthProtected={false}
+              isAuthProtected={true}
               exact
             />
           ))}
         </Switch>
       </Router>
-    </React.Fragment>
+    </div>
+  </React.Fragment>
   )
 }
 
 App.propTypes = {
-  layout: PropTypes.any
+  layout: PropTypes.any,
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     layout: state.Layout,
   }

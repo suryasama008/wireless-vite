@@ -71,35 +71,7 @@ const RightSidebar = props => {
             <hr className="my-0" />
 
             <div className="p-4">
-              <div className="radio-toolbar">
-                <span className="mb-2 d-block">Layouts</span>
-                <input
-                  type="radio"
-                  id="radioVertical"
-                  name="radioFruit"
-                  value={layoutTypes.VERTICAL}
-                  checked={props.layoutType === layoutTypes.VERTICAL}
-                  onChange={e => {
-                    if (e.target.checked) {
-                      props.changeLayout(e.target.value);
-                    }
-                  }}
-                />
-                <label className="me-1" htmlFor="radioVertical">Vertical</label>
-                <input
-                  type="radio"
-                  id="radioHorizontal"
-                  name="radioFruit"
-                  value={layoutTypes.HORIZONTAL}
-                  checked={props.layoutType === layoutTypes.HORIZONTAL}
-                  onChange={e => {
-                    if (e.target.checked) {
-                      props.changeLayout(e.target.value);
-                    }
-                  }}
-                />
-                <label htmlFor="radioHorizontal">Horizontal</label>
-              </div>
+             
 
               <hr className="mt-1" />
               <div className="radio-toolbar">
@@ -237,94 +209,6 @@ const RightSidebar = props => {
                         <label
                           htmlFor="leftsidebarThemecolored"
                           className="bg-colored rounded-circle wh-30 me-1"
-                        ></label>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col>
-
-                        <input
-                          type="radio"
-                          id="leftsidebarThemewinter"
-                          name="leftsidebarTheme"
-                          value={leftSideBarThemeTypes.WINTER}
-                          checked={props.leftSideBarTheme === leftSideBarThemeTypes.WINTER}
-                          onChange={e => {
-                            if (e.target.checked) {
-                              props.changeSidebarTheme(e.target.value);
-                            }
-                          }}
-                        />
-                        <label
-                          htmlFor="leftsidebarThemewinter"
-                          className="gradient-winter rounded-circle wh-30 me-1"
-                        ></label>
-
-                        <input
-                          type="radio"
-                          id="leftsidebarThemeladylip"
-                          name="leftsidebarTheme"
-                          value={leftSideBarThemeTypes.LADYLIP}
-                          checked={props.leftSideBarTheme === leftSideBarThemeTypes.LADYLIP}
-                          onChange={e => {
-                            if (e.target.checked) {
-                              props.changeSidebarTheme(e.target.value);
-                            }
-                          }}
-                        />
-                        <label
-                          htmlFor="leftsidebarThemeladylip"
-                          className="gradient-lady-lip rounded-circle wh-30 me-1"
-                        ></label>
-
-                        <input
-                          type="radio"
-                          id="leftsidebarThemeplumplate"
-                          name="leftsidebarTheme"
-                          value={leftSideBarThemeTypes.PLUMPLATE}
-                          checked={props.leftSideBarTheme === leftSideBarThemeTypes.PLUMPLATE}
-                          onChange={e => {
-                            if (e.target.checked) {
-                              props.changeSidebarTheme(e.target.value);
-                            }
-                          }}
-                        />
-                        <label
-                          htmlFor="leftsidebarThemeplumplate"
-                          className="gradient-plum-plate rounded-circle wh-30 me-1"
-                        ></label>
-
-                        <input
-                          type="radio"
-                          id="leftsidebarThemestrongbliss"
-                          name="leftsidebarTheme"
-                          value={leftSideBarThemeTypes.STRONGBLISS}
-                          checked={props.leftSideBarTheme === leftSideBarThemeTypes.STRONGBLISS}
-                          onChange={e => {
-                            if (e.target.checked) {
-                              props.changeSidebarTheme(e.target.value);
-                            }
-                          }}
-                        />
-                        <label
-                          htmlFor="leftsidebarThemestrongbliss"
-                          className="gradient-strong-bliss rounded-circle wh-30 me-1"
-                        ></label>
-                        <input
-                          type="radio"
-                          id="leftsidebarThemesgreatwhale"
-                          name="leftsidebarTheme"
-                          value={leftSideBarThemeTypes.GREATWHALE}
-                          checked={props.leftSideBarTheme === leftSideBarThemeTypes.GREATWHALE}
-                          onChange={e => {
-                            if (e.target.checked) {
-                              props.changeSidebarTheme(e.target.value);
-                            }
-                          }}
-                        />
-                        <label
-                          htmlFor="leftsidebarThemesgreatwhale"
-                          className="gradient-strong-great-whale rounded-circle wh-30 me-1"
                         ></label>
                       </Col>
                     </Row>

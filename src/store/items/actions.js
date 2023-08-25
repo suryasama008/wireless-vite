@@ -13,9 +13,12 @@ import {
     DELETE_ITEM_FAILURE
 } from './actionTypes';
 
-export const getItems = () => ({
-    type: GET_ITEMS, 
-});
+export const getItems = (store) => {
+    return {
+        type: GET_ITEMS,
+        payload: store,
+    }
+};
 
 export const getItemsSuccess = (items) => ({
     type: GET_ITEMS_SUCCESS,

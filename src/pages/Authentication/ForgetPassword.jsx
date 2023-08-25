@@ -12,7 +12,7 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 
 // action
-import { userForgetPassword } from "../../store/actions";
+// import { userForgetPassword } from "../../store/actions";
 
 // import images
 import profile from "../../assets/images/profile-img.png";
@@ -34,7 +34,7 @@ const ForgetPasswordPage = props => {
       email: Yup.string().required("Please Enter Your Email"),
     }),
     onSubmit: (values) => {
-      dispatch(userForgetPassword(values, props.history));
+      // dispatch(userForgetPassword(values, props.history));
     }
   });
 

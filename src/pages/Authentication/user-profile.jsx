@@ -27,7 +27,7 @@ import Breadcrumb from "../../components/Common/Breadcrumb";
 
 import avatar from "../../assets/images/users/avatar-1.jpg";
 // actions
-import { editProfile, resetProfileFlag } from "../../store/actions";
+
 
 const UserProfile = (props) => {
 
@@ -61,7 +61,7 @@ const UserProfile = (props) => {
         setidx(obj.uid);
       }
       setTimeout(() => {
-        dispatch(resetProfileFlag());
+        // dispatch(resetProfileFlag());
       }, 3000);
     }
   }, [dispatch, success]);
@@ -78,7 +78,7 @@ const UserProfile = (props) => {
       username: Yup.string().required("Please Enter Your UserName"),
     }),
     onSubmit: (values) => {
-      dispatch(editProfile(values));
+      // dispatch(editProfile(values));
     }
   });
 

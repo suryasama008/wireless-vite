@@ -18,7 +18,7 @@ const SidebarContent = props => {
   useEffect(() => {
     const pathName = props.location.pathname
 
-    const initMenu = () => {
+    const initMenu = () => { 
       new MetisMenu("#side-menu")
       let matchingMenuItem = null
       const ul = document.getElementById("side-menu")
@@ -92,7 +92,65 @@ const SidebarContent = props => {
       <SimpleBar className='h-100' ref={ref}>
         <div id='sidebar-menu'>
           <ul className='metismenu list-unstyled' id='side-menu'>
-            <li className='menu-title'>{props.t('Menu')} </li>
+          <li className="menu-title">{props.t("Products")}</li>
+          <li>
+              <Link to='/items' className=''>
+                <i className='bx bx-mobile'></i>
+                <span>{props.t('Products')}</span>
+              </Link>
+            </li>
+          <li>
+              <Link to='/product-form' className=''>
+                <i className='bx bx-plus'></i>
+                <span>{props.t('Add Product')}</span>
+              </Link>
+            </li>
+            
+            <li>
+              <Link to='/items-search' className=''>
+                <i className='bx bx-search'></i>
+                <span>{props.t('Database')}</span>
+              </Link>
+            </li>
+            <li>
+              <Link to='/add-models' className=''>
+                <i className='bx bx-spreadsheet '></i>
+                <span>{props.t('Add Models')}</span>
+              </Link>
+            </li>
+          
+            <li className="menu-title">{props.t("Orders")}</li>
+            <li>
+              <Link to='/orders'>
+                <i className='bx bx-select-multiple'></i>
+                <span>{props.t('Place Order')}</span>
+              </Link>
+            </li>
+            <li>
+              <Link to='/orders-list'>
+                <i className='bx bx-align-middle'></i>
+                <span>{props.t('Show Orders')}</span>
+              </Link>
+            </li>
+            <li className="menu-title">{props.t("Store")}</li>
+            <li>
+              <Link to='/teal' className=''>
+                <i className='bx bx-dollar '></i>
+                <span>{props.t('Till')}</span>
+              </Link>
+            </li>
+            <li>
+              <Link to='/employees' className=' '>
+                <i className='bx bx-user'></i>
+                <span>{props.t('Attendance')}</span>
+              </Link>
+            </li>
+            <li>
+              <Link to='/employee-list' className=' '>
+                <i className='bx bx-user'></i>
+                <span>{props.t('Employee List')}</span>
+              </Link>
+            </li>
             <li>
               <Link to='/dashboard' className=''>
                 <i className='bx bx-home-circle'></i>
@@ -100,120 +158,6 @@ const SidebarContent = props => {
               </Link>
             </li>
 
-            <li className='menu-title'>{props.t('Products')}</li>
-            <li>
-              <Link to='/items' className=''>
-                <i className='bx bx-food-menu'></i>
-                <span>{props.t('Products')}</span>
-              </Link>
-            </li>
-            <li>
-              <Link to='/crypto-orders'>
-                <i className='bx bx-task'></i>
-                <span>{props.t('Order')}</span>
-              </Link>
-            </li>
-            <li className='menu-title'>{props.t('Employees')}</li>
-            <li>
-              <Link to='/calendar' className=' '>
-                <i className='bx bx-calendar'></i>
-                <span>{props.t('Schedule')}</span>
-              </Link>
-            </li>
-
-            <li>
-              <Link to='/chat' className=''>
-                <i className='bx bx-chat'></i>
-                <span>{props.t('Chat')}</span>
-              </Link>
-            </li>
-            <li className='menu-title'>{props.t('Store')}</li>
-            <li>
-              <Link to='/contacts-list'>
-                <i className='bx bxs-user-detail'></i>
-                <span>{props.t('Contacts')}</span>
-              </Link>
-            </li>
-            <li>
-              <Link to='/#' className=''>
-                <i className='bx bx-paper-plane'></i>
-                <span>{props.t('Shootout')}</span>
-              </Link>
-            </li>
-            <li>
-              <Link to='/invoices-detail' className=' '>
-                <i className='bx bx-receipt'></i>
-                <span>{props.t('Invoices')}</span>
-              </Link>
-            </li>
-            <li className='menu-title'>Pages</li>
-            <li>
-              <Link to='/#' className='has-arrow '>
-                <i className='bx bx-user-circle'></i>
-                <span>{props.t('Authentication')}</span>
-              </Link>
-              <ul className='sub-menu'>
-                <li>
-                  <Link to='/pages-login'>{props.t('Login')}</Link>
-                </li>
-                <li>
-                  <Link to='/pages-login-2'>{props.t('Login 2')}</Link>
-                </li>
-                <li>
-                  <Link to='/pages-register'>{props.t('Register')}</Link>
-                </li>
-                <li>
-                  <Link to='/pages-register-2'>{props.t('Register 2')}</Link>
-                </li>
-                <li>
-                  <Link to='/page-recoverpw'>
-                    {props.t('Recover Password')}
-                  </Link>
-                </li>
-                <li>
-                  <Link to='/page-recoverpw-2'>
-                    {props.t('Recover Password 2')}
-                  </Link>
-                </li>
-                <li>
-                  <Link to='/auth-lock-screen'>{props.t('Lock Screen')}</Link>
-                </li>
-                <li>
-                  <Link to='/auth-lock-screen-2'>
-                    {props.t('Lock Screen 2')}
-                  </Link>
-                </li>
-                <li>
-                  <Link to='/page-confirm-mail'>{props.t('Confirm Mail')}</Link>
-                </li>
-                <li>
-                  <Link to='/page-confirm-mail-2'>
-                    {props.t('Confirm Mail 2')}
-                  </Link>
-                </li>
-                <li>
-                  <Link to='/auth-email-verification'>
-                    {props.t('Email Verification')}
-                  </Link>
-                </li>
-                <li>
-                  <Link to='/auth-email-verification-2'>
-                    {props.t('Email Verification 2')}
-                  </Link>
-                </li>
-                <li>
-                  <Link to='/auth-two-step-verification'>
-                    {props.t('Two Step Verification')}
-                  </Link>
-                </li>
-                <li>
-                  <Link to='/auth-two-step-verification-2'>
-                    {props.t('Two Step Verification 2')}
-                  </Link>
-                </li>
-              </ul>
-            </li>
-            <li className='menu-title'>{props.t('Components')}</li>
           </ul>
         </div>
       </SimpleBar>

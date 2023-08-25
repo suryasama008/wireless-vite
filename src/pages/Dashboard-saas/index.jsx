@@ -1,197 +1,185 @@
-import React, { useEffect,useState } from "react";
-import { Container, Row, Col } from "reactstrap";
+import React, { useEffect, useState, useCallback, useMemo } from 'react'
+import { connect } from 'react-redux'
+import { Container, Row, Col } from 'reactstrap'
+import CardUser from './card-user'
 
-//Import Breadcrumb
-import Breadcrumbs from "../../components/Common/Breadcrumb";
+import InStock from './InStock'
+import MiniWidget from './mini-widget'
+import Earning from './earning'
+import Buysell from './buy-sell'
+import LocationBasedLogin from './LoginBasedLogin'
 
-//Import Components
-import CardUser from "./card-user";
-import CardWelcome from "./card-welcome";
-import MiniWidget from "./mini-widget";
-import Transactions from './transactions'
-import Earning from "./earning";
-import SalesAnalytics from "./sales-analytics";
-import TotalSellingProduct from "./total-selling-product";
-import Tasks from "./tasks";
-import ChatBox from "./chat-box";
-import Buysell from "./buy-sell";
-import LatestTranaction from "./LatestTranaction";
-import ActivityFeed from "./ActivityFeed";
 import { useSelector, useDispatch } from 'react-redux'
-import { getItems as onGetItems } from '../../store/actions'
-const DashboardSaas = (props) => {
-  const store = "EMTC"
+import {
+  getItems as onGetItems,
+} from '../../store/actions'
+import { getUsersData as onGetUsers } from '../../store/actions'
+import {getAdminProducts} from '../../helpers/DataContext'
+import PropTypes from 'prop-types'
+
+const DashboardSaas = ({ user, items, employees }) => {
+  const [isLoading, setIsLoading] = useState(false)
+  const [store, setStore] = useState('BCC LL')
   const [itemList, setItemList] = useState([])
-/* This is a function that is used to calculate the number of items sold, revenue, and expenses per
-month for the current year and last year. */
-    const dispatch = useDispatch()
-    const { items } = useSelector((state) => ({
-      items: state.ItemReducer.items,
-    }))
-  const storeItems = items.filter((item) => item.store === store)
+  const [storeItems, setStoreItems] = useState([])
+  const [brandCount, setBrandCount] = useState([])
+  const dispatch = useDispatch()
 
-    useEffect(() => {
-      dispatch(onGetItems())
-    }, [dispatch])
- 
-
-/* This is a function that is used to calculate the number of items sold, revenue, and expenses per
-month for the current year and last year. */
-  let itemsSoldPerMonthCurrentYear = Array(12).fill(0)
-  let itemsRevenuePerMonthCurrentYear = Array(12).fill(0)
-  let itemsExpensesPerMonthCurrentYear = Array(12).fill(0)
-  let itemsSoldPerMonthLastYear = Array(12).fill(0)
-  let itemsRevenuePerMonthLastYear = Array(12).fill(0)
-  const currentYear = new Date().getFullYear()
-  const lastYear = currentYear - 1
-  const currentMonth = new Date().getMonth()
-  items.forEach((item) => {
-    const date = new Date(item.updatedAt.seconds * 1000)
-    const year = date.getFullYear()
-    const month = date.getMonth()
-    const buyDate = new Date(item.createdAt.seconds * 1000)
-    const buyYear = buyDate.getFullYear()
-    const buyMonth = buyDate.getMonth()
-    let quantity = 0
-    if (item.store === store) {
-      if (buyYear === currentYear) {
-        itemsExpensesPerMonthCurrentYear[buyMonth] += 1 * item.price
-      }
-      if (item.status === 'SOLD' && item.store === store) {
-        if (year === currentYear) {
-          itemsSoldPerMonthCurrentYear[month] += 1
-          itemsRevenuePerMonthCurrentYear[month] += 1 * item.sell
-          // itemsExpensesPerMonthCurrentYear[buyMonth] += 1 * item.price
-      
-        } else if (year === lastYear) {
-          itemsSoldPerMonthLastYear[month] += 1
-          itemsRevenuePerMonthLastYear[month] += 1 * item.sell
-        }
-      }
-    }
-  })
-
-
-/* An array of objects that is used to render the mini widgets. */
-  const reports = [
-    {
-      icon: 'bx bx-copy-alt',
-      title: 'Sold Phones',
-      value: itemsSoldPerMonthCurrentYear[currentMonth],
-      badgeValue: '',
-      color: 'success',
-      desc: 'This Month',
-    },
-    {
-      icon: 'bx bx-archive-in',
-      title: 'Revenue',
-      value: '$' + itemsRevenuePerMonthCurrentYear[currentMonth],
-      badgeValue: '',
-      color: 'success',
-      desc: 'This Month',
-    },
-    {
-      icon: 'bx bx-purchase-tag-alt',
-      title: 'Expenses',
-      value: '$' + itemsExpensesPerMonthCurrentYear[currentMonth],
-      badgeValue: '',
-      color: 'warning',
-      desc: 'This Month',
-    },
-  ]
-
- 
-/* Filtering the items by status and condition and then grouping them by model and store. */
-
+  const getProducts = async () => {
+    const products = await getAdminProducts()
+    console.log(products)
+  }
 
   useEffect(() => {
-    const getItems = () => {
-      //remove space after model "iPhone 11 Pro Max " => "iPhone11ProMax"
-      const dataList = items.map((item) => {
-        if (item.status === 'IN STOCK') {
-          return {
-            ...item,
-            model: item.model.trim(),
+    setStore(user.store)
+    if(user.admin){
+      getProducts()
+    }else{
+      dispatch(onGetItems(user.store))
+    }
+  }, [user])
+
+  useEffect(() => {
+    const storeItems = items.filter((item) => item.store === store && item.status === 'IN STOCK')
+    const brandCounts = storeItems.reduce((brands, item) => {
+      // Ensure the item has a brand
+      if (item.brand && item.brand !== 'SERVICE PHONE') {
+        // If this brand has been seen before, increment its count
+        if (brands[item.brand]) {
+          brands[item.brand]++
+        } 
+        // If this brand hasn't been seen before, initialise its count to 1
+        else {
+          brands[item.brand] = 1
+        }
+      }
+      return brands
+    }, [])
+  
+    // Convert the brand counts to the desired format
+    const brandCountsArray = Object.entries(brandCounts).map(([name, value]) => ({ name, value }))
+    setBrandCount(brandCountsArray)
+  }, [items])
+
+  
+  const itemCalculations = useMemo(() => {
+    let itemsSoldPerMonthCurrentYear = Array(12).fill(0)
+    let itemsRevenuePerMonthCurrentYear = Array(12).fill(0)
+    let itemsExpensesPerMonthCurrentYear = Array(12).fill(0)
+    let itemsSoldPerMonthLastYear = Array(12).fill(0)
+    let itemsRevenuePerMonthLastYear = Array(12).fill(0)
+    const currentYear = new Date().getFullYear()
+    const lastYear = currentYear - 1
+    const currentMonth = new Date().getMonth()
+    var temp
+    items.forEach((item) => {
+      const date = new Date(item.updatedAt?.seconds * 1000)
+      const year = date.getFullYear()
+      const month = date.getMonth()
+      const buyDate = new Date(item.createdAt?.seconds * 1000)
+      const buyYear = buyDate.getFullYear()
+      const buyMonth = buyDate.getMonth()
+    
+      if (item.store === store) {
+        if (buyYear === currentYear && !isNaN(item.price)) {
+          itemsExpensesPerMonthCurrentYear[buyMonth] += 1 * Number(item.price)
+        }
+      
+        if (item.status === 'SOLD' && item.store === store) {
+          if(month === currentMonth){
+            console.log('Year:', year, 'Month:', month);
+            }
+          if (year === currentYear && item.sell !== undefined) {
+          
+            itemsSoldPerMonthCurrentYear[month] += 1
+            itemsRevenuePerMonthCurrentYear[month] += 1 * item.sell
+          } else if (year === lastYear) {
+            itemsSoldPerMonthLastYear[month] += 1
+            itemsRevenuePerMonthLastYear[month] += 1 * item.sell
+          }else{
+            console.log('no items sold')
           }
         }
-      })
-        
-       const newItems = dataList.filter(
-         (item) => item?.status === 'IN STOCK' && item.condition === 'NEW'
-       )
-       const usedItems = dataList.filter(
-         (item) => item?.status === 'IN STOCK' && item.condition === 'USED'
-       )
-       const models = [
-         ...new Set(
-           items.map((item) => {
-             if (item.status === 'IN STOCK') {
-               return item.model
-             }
-           })
-         ),
-       ]
-       const modelsArray = []
+      }
+    })
+  
+    return {
+      itemsSoldPerMonthCurrentYear,
+      itemsRevenuePerMonthCurrentYear,
+      itemsExpensesPerMonthCurrentYear,
+      itemsSoldPerMonthLastYear,
+      itemsRevenuePerMonthLastYear,
+      currentMonth
+    }
+  }, [items, store])
 
-       models.forEach((model) => {
-         //ignore space
-         const newModel = newItems.filter((item) => item.model === model)
-         const usedModel = usedItems.filter((item) => item.model === model)
-         const stores = [...new Set(items.map((item) => item.store))]
-         const storeObj = stores.map((store) => {
-           const newStore = newModel.filter((item) => item.store === store)
-           const usedStore = usedModel.filter((item) => item.store === store)
-           //dont show store if no items
-           if (newStore.length === 0 && usedStore.length === 0) {
-             return
-           }
-           return `${store}(${newStore.length}, ${usedStore.length})`
-         })
-         //make a string of stores remove empty strings in the object
-         const storeObjFiltered = storeObj.filter((item) => item !== undefined)
+  
+  const {
+    itemsSoldPerMonthCurrentYear,
+    itemsRevenuePerMonthCurrentYear,
+    itemsExpensesPerMonthCurrentYear,
+    itemsSoldPerMonthLastYear,
+    itemsRevenuePerMonthLastYear,
+    currentMonth
+  } = itemCalculations
+  console.log(itemsRevenuePerMonthCurrentYear)
 
-         const storeString = storeObjFiltered.join(', ')
-         if (newModel.length + usedModel.length) {
-           const modelObj = {
-             model,
-             new: newModel.length,
-             used: usedModel.length,
-             total: newModel.length + usedModel.length,
-             store: storeString,
-           }
 
-           modelsArray.push(modelObj)
-         }
-       })
+  /* An array of objects that is used to render the mini widgets. */
+  const reports = useMemo(
+    () => [
+      {
+        icon: 'bx bx-copy-alt',
+        title: 'Sold Phones',
+        value: itemsSoldPerMonthCurrentYear[currentMonth],
+        badgeValue: '',
+        color: 'success',
+        desc: 'This Month',
+      },
+      {
+        icon: 'bx bx-archive-in',
+        title: 'Revenue',
+        value: '$' + itemsRevenuePerMonthCurrentYear[currentMonth].toFixed(2),
+        badgeValue: '',
+        color: 'success',
+        desc: 'This Month',
+      },
+      {
+        icon: 'bx bx-purchase-tag-alt',
+        title: 'Expenses',
+        value: '$' + itemsExpensesPerMonthCurrentYear[currentMonth].toFixed(2),
+        badgeValue: '',
+        color: 'warning',
+        desc: 'This Month',
+      },
+    ],
+    [
+      itemsSoldPerMonthCurrentYear,
+      itemsRevenuePerMonthCurrentYear,
+      itemsExpensesPerMonthCurrentYear,
+      currentMonth,
+    ]
+  )
 
-       //remove space at the end of model."IPHONE 11 " -> "IPHONE 11 "
-       const modelsArrayFiltered = modelsArray.filter(
-         (item) => item.model !== undefined
-       )
 
-       modelsArrayFiltered.sort((a, b) => a.total - b.total)
-       return modelsArrayFiltered
-     }
-    const itemsArray = getItems()
-    setItemList(itemsArray)
-  }, [items])
   //meta title
-  document.title =
-    "Dashboard | Store Admin Dashboard ";
+  document.title = 'Dashboard | Store Admin Dashboard '
+
 
   return (
     <React.Fragment>
       <div className='page-content'>
         <Container fluid>
-          {/* Render Breadcrumb */}
-          <Breadcrumbs title='Dashboard' breadcrumbItem='EMTC' />
           {/* Card User */}
-          <CardUser items={storeItems} />
+            <CardUser items={items} store={store} />
           <Row>
             {/* welcome card */}
-            <CardWelcome />
-
-            <Col xl='8'>
+            <Col xl='6'>
+              <Row>
+            <InStock items={items} store={store} />
+              </Row>
+            </Col>
+            <Col xl='6'>
               <Row>
                 {/*mimi widgets */}
                 <MiniWidget reports={reports} items={items} />
@@ -199,7 +187,9 @@ month for the current year and last year. */
             </Col>
           </Row>
           <Row>
-            <Buysell items={items} />
+            <Col xl='4'>
+            <Buysell brandCount = {brandCount} />
+            </Col>
 
             {/* earning */}
             <Earning
@@ -212,13 +202,26 @@ month for the current year and last year. */
               }}
             />
           </Row>
-          <Row>
-            <LatestTranaction itemList={itemList} />
-          </Row>
         </Container>
       </div>
+
+      {/* Render EmployeeLoginModal */}
+
     </React.Fragment>
   )
-};
+}
 
-export default DashboardSaas;
+const mapStateToProps = (state) => {
+  return {
+    user: state.users.user,
+    items: state.ItemReducer.items,
+    employees: state.users.employees || [],
+  }
+}
+
+DashboardSaas.propTypes = {
+  items: PropTypes.array.isRequired,
+  employees: PropTypes.array.isRequired,
+}
+
+export default connect(mapStateToProps)(DashboardSaas)

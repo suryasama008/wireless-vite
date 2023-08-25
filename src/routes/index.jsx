@@ -13,6 +13,19 @@ import UserProfile from "../pages/Authentication/user-profile";
 // Pages Calendar
 import Calendar from "../pages/Calendar/index";
 
+//Pages Employees
+import Employees from "../pages/Employees/Employees";
+import EmployeeList from '../pages/Employees/EmployeeList'
+
+//Pages Teal
+import Teal from "../pages/Teal/Teal";
+
+//Pages SalesSummary
+import SalesSummary from "../pages/SalesSummary/SalesSummary";
+
+//Pages AddModels
+import AddModels from "../pages/models/AddModels";
+
 // // //Tasks
 import TasksList from "../pages/Tasks/tasks-list";
 import TasksCreate from "../pages/Tasks/tasks-create";
@@ -43,8 +56,9 @@ import EmailTemplateBilling from "../pages/Email/email-template-billing";
 // //Invoices
 import InvoicesList from "../pages/Invoices/invoices-list";
 import InvoiceDetail from "../pages/Invoices/invoices-detail";
+import InvoiceGrid from "../pages/Invoices/InvoiceGrid"
 
-// // Authentication related pages
+// Authentication related pages
 import Login from "../pages/Authentication/Login";
 import Logout from "../pages/Authentication/Logout";
 import Register from "../pages/Authentication/Register";
@@ -127,7 +141,16 @@ import CandidateOverview from "../pages/JobPages/CandidateOverview";
 
 //Items
 import ItemList from "../pages/Items/ItemList/ItemList";
+import ItemSearch from "../pages/Items/ItemList/ItemSearch";
+import ProductSell from "../pages/Dashboard-saas/ProductSell";
+import ProductForm from "../pages/Items/ItemList/ProductForm";
+import ProductEdit from "../pages/Items/ItemList/ProductEdit";
 
+//Orders
+import Order from "../pages/Items/orders/Order";
+
+// Orders list
+import OrdersList from "../pages/Items/orders/OrdersList";
 
 // // Forms
 import FormElements from "../pages/Forms/FormElements";
@@ -185,13 +208,19 @@ import ContactsGrid from "../pages/Contacts/contacts-grid";
 import ContactsList from "../pages/Contacts/ContactList/contacts-list";
 import ContactsProfile from "../pages/Contacts/ContactsProfile/contacts-profile";
 
+import ProductAdd from "../pages/Items/ItemList/ProductAdd";
+
+import AddValue from "../pages/Items/ItemList/AddValues";
+
 const authProtectedRoutes = [
+  { path : "/product-add", component : ProductAdd},
   { path: '/dashboard', component: Dashboard },
   { path: '/dashboard-saas', component: DashboardSaas },
   { path: '/dashboard-crypto', component: DashboardCrypto },
   { path: '/blog', component: Blog },
   { path: '/dashboard-job', component: DashboardJob },
 
+  {path: '/add-value', component: AddValue},
   //   //Crypto
   { path: '/crypto-wallet', component: CryptoWallet },
   { path: '/crypto-buy-sell', component: CryptoBuySell },
@@ -202,6 +231,16 @@ const authProtectedRoutes = [
 
   //Items
   { path: '/items', component: ItemList },
+  { path: '/items-search', component: ItemSearch },
+  { path: '/product-sell/:id', component: ProductSell },
+  { path: '/product-form', component: ProductForm},
+  { path : '/product-edit/:id', component : ProductEdit},
+
+  //Order
+  { path: '/orders', component: Order },
+  
+  //Orders List
+  { path: '/orders-list', component: OrdersList },
 
   //chat
   { path: '/chat', component: Chat },
@@ -211,6 +250,19 @@ const authProtectedRoutes = [
 
   // //calendar
   { path: '/calendar', component: Calendar },
+
+  //employees
+  { path: '/employees', component: Employees },
+  { path: '/employee-list', component: EmployeeList},
+
+  //Teal
+  {path: '/teal', component: Teal},
+
+  //Sales Summary
+  {path: '/sales-summary', component: SalesSummary},
+
+  //add models
+  {path: '/add-models', component: AddModels},
 
   //   // //profile
   { path: '/profile', component: UserProfile },
@@ -235,6 +287,7 @@ const authProtectedRoutes = [
   //   //Invoices
   { path: '/invoices-list', component: InvoicesList },
   { path: '/invoices-detail/:id?', component: InvoiceDetail },
+  { path: '/invoices-grid', component: InvoiceGrid },
 
   //   // Tasks
   { path: '/tasks-list', component: TasksList },
@@ -338,7 +391,7 @@ const authProtectedRoutes = [
 
   //   // this route should be at the end of all other routes
   //   // eslint-disable-next-line react/display-name
-  { path: '/', exact: true, component: () => <Redirect to='/dashboard' /> },
+  { path: '/', exact: true, component: () => <Redirect to='/items' /> },
 ]
 
 const publicRoutes = [

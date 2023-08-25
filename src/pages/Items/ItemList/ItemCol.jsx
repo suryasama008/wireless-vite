@@ -3,14 +3,15 @@ import { Badge } from 'reactstrap'
 import { Link } from 'react-router-dom'
 
 const Store = (cell) => {
-  return cell.value ? cell.value : ''
+  return cell ? cell.value: ''
 }
 
 const Brand = (cell) => {
   return cell.value ? cell.value : ''
 }
 const Color = (cell) => {
-  return cell.value ? cell.value : ''
+  const uppercaseString = cell.value ? cell.value.toUpperCase() : ''
+  return uppercaseString
 }
 
 const Storage = (cell) => {
@@ -21,10 +22,10 @@ const Imei = (cell) => {
 }
 
 const Battery = (cell) => {
-  return cell.value ? cell.value : ''
+  return cell.value ? cell.value + '%' : ''
 }
 const SellingPrice = (cell) => {
-  return cell.value ? cell.value : ''
+  return cell.value ?  '$ ' + cell.value: ''
 }
 
 const Status = (cell) => {
@@ -40,10 +41,11 @@ const Condition = (cell) => {
 const Model = (cell) => {
   return cell.value ? cell.value : ''
 }
-
+const Costprice = (cell) => {
+  return cell.value ? cell.value : ''
+}
 const UpdatedAt = (cell) => {
-  var date = new Date(cell.value.seconds * 1000 + cell.value.nanoseconds / 1000000);
-  return date.toLocaleDateString();
+  return cell.value ? cell.value : ''
 }
 
 export {
@@ -57,5 +59,6 @@ export {
   SellingPrice,
   Status,
   Condition,
+  Costprice,
   UpdatedAt,
 }

@@ -20,9 +20,16 @@ import {
   deleteItem,
 } from '../../helpers/fakebackend_helper'
 
-function* fetchItems() {
+import {
+  getProducts,
+  updateProduct,
+  deleteProduct,
+  addProduct,
+} from '../../helpers/DataContext'
+
+function* fetchItems({ payload: store }) {
     try {
-        const response = yield call(getItems);
+        const response = yield call(getProducts, store);
         yield put(getItemsSuccess(response));
     } catch (error) {
         yield put(getItemsFailure(error));
@@ -31,7 +38,7 @@ function* fetchItems() {
 
 function* onAddNewItem({ payload: data }) {
     try {
-        const response = yield call(addNewItem, data);
+        const response = yield call(addProduct, data);
         yield put(addNewItemSuccess(response));
     } catch (error) {
         yield put(addNewItemFailure(error));
@@ -40,7 +47,7 @@ function* onAddNewItem({ payload: data }) {
 
 function* onUpdateItem({ payload: data }) {
     try {
-        const response = yield call(updateItem, data);
+        const response = yield call(updateProduct, data);
         yield put(updateItemSuccess(response));
     } catch (error) {
         yield put(updateItemFailure(error));
@@ -49,7 +56,7 @@ function* onUpdateItem({ payload: data }) {
 
 function* onDeleteItem({ payload: data }) {
     try {
-        const response = yield call(deleteItem, data);
+        const response = yield call(deleteProduct, data);
         yield put(deleteItemSuccess(response));
     } catch (error) {
         yield put(deleteItemFailure(error));

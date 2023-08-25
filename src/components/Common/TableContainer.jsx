@@ -93,7 +93,7 @@ function GlobalFilter({
             pageSize: customPageSize,
             sortBy: [
               {
-                desc: true,
+                // desc: true,
               },
             ],
           },
@@ -120,19 +120,7 @@ function GlobalFilter({
   return (
     <Fragment>
       <Row className="mb-2">
-        <Col md={customPageSizeOptions ? 2 : 1}>
-          <select
-            className="form-select"
-            value={pageSize}
-            onChange={onChangeInSelect}
-          >
-            {[10, 20, 30, 40, 50].map(pageSize => (
-              <option key={pageSize} value={pageSize}>
-                Show {pageSize}
-              </option>
-            ))}
-          </select>
-        </Col>
+
         {/* {isGlobalFilter && (
           <GlobalFilter
             preGlobalFilteredRows={preGlobalFilteredRows}

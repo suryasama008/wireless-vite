@@ -6,7 +6,7 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 
 // action
-import { registerUser, apiError } from "../../store/actions";
+// import { registerUser, apiError } from "../../store/actions";
 
 //redux
 import { useSelector, useDispatch } from "react-redux";
@@ -37,7 +37,7 @@ const Register = props => {
       password: Yup.string().required("Please Enter Your Password"),
     }),
     onSubmit: (values) => {
-      dispatch(registerUser(values));
+      // dispatch(registerUser(values));
     }
   });
 
@@ -48,7 +48,7 @@ const Register = props => {
   }));
 
   useEffect(() => {
-    dispatch(apiError(""));
+    // dispatch(apiError(""));
   }, []);
 
   return (
@@ -196,7 +196,7 @@ const Register = props => {
                   </Link>{" "}
                 </p>
                 <p>
-                  © {new Date().getFullYear()} Wireless +. Crafted with{" "}
+                  © {new Date().getFullYear()} Wireless +. Created by
                   <i className="mdi mdi-heart text-danger" /> by Surya Sama
                 </p>
               </div>
