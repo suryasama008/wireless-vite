@@ -9,15 +9,27 @@ import {
   updateOrders as onUpdateOrder,
   deleteOrders as onDeleteOrder,
 } from '/src/store/actions'
-import { Button, Row, Col, Card, CardBody, InputGroup,Table } from 'reactstrap'
+import { Button, Row, Col, Card, CardBody, InputGroup,Table, Toast,
+  ToastHeader,
+  ToastBody, } from 'reactstrap'
 import Flatpickr from 'react-flatpickr'
 import 'flatpickr/dist/themes/material_blue.css'
 import Breadcrumbs from '../../../components/Common/Breadcrumb'
-import moment from 'moment'
+import { collection, query, where, getDocs, doc, updateDoc } from 'firebase/firestore';
+import { db } from '../../../helpers/firebase';
+import moment from 'moment';
+import axios from 'axios';
+
+import ModelDisplay from './ModelDisplay'
 
 const OrdersList = ({ order, user }) => {
   const [store, setStore] = useState('')
+    const [toast, setToast] = useState(false);
+  const [message, setMessage] = useState('')
+
   const [orders, setOrders] = useState([])
+  const [selectedDate, setSelectedDate] = useState(moment().format('DD-MM-YYYY'))
+  const [showTotals, setShowTotals] = useState(false);
 
  /**
   * The function formatDate formats a given date into a string with the format "dd/mm/yyyy", and the
@@ -27,68 +39,168 @@ const OrdersList = ({ order, user }) => {
   * hook initializes the `selectedDate` state variable with the value of `today`.
   */
  
+
+ const orderCollectionRef = collection(db, 'orders1');
+ useEffect(() => {
+    const fetchOrders = async ( ) => {
+            const date = moment().format('DD-MM-YYYY')
+            const ordersQuery = query(orderCollectionRef, where('date', '==', selectedDate));
+            const data = await getDocs(ordersQuery);
+            const orders = data.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+            console.log(orders)
+            setOrders(orders)
+        }
+        fetchOrders()
+}, [selectedDate]);
  useEffect(() => {
   setStore(user.store)
 }, [user])
-  const formatDate = (date) => {
-    const day = date.getDate().toString().padStart(2, '0')
-    const month = (date.getMonth() + 1).toString().padStart(2, '0')
-    const year = date.getFullYear()
-    console.log()
-    return `${month}/${date}/${year}`
-  }
-  const today = formatDate(new Date())
-  const [selectedDate, setSelectedDate] = useState(moment().format('DD/MM/YYYY'))
 
 /* This code block is using the `useDispatch` hook from the `react-redux` library to get a reference to
 the `dispatch` function, which is used to dispatch actions to the Redux store. */
 
-  const dispatch = useDispatch()
-  useEffect(() => {
-    const date = new Date().toLocaleDateString()
-    dispatch(onFetchOrders(date))
-    // if(date !== selectedDate) dispatch(onFetchOrders(selectedDate))
-  }, [dispatch])
 
-  useEffect(()=>{
-    const filteredOrders = order[0]?.products.filter(prod => prod.store === store)
-    console.log(filteredOrders)
-    setOrders(filteredOrders)
-  },[store,order])
-
- /**
-  * This function dispatches an action to fetch orders for a selected date.
-  */
-  const handleRefresh = () => {
-   dispatch(onFetchOrders(selectedDate))
-  }
-
-  const handleDateChange = ( dateStr) => {
-    const date = new Date(dateStr).toLocaleDateString()
-    // setSelectedDate(date)
-    dispatch(onFetchOrders(date))
-  }
+  const handleDateChange = (selectedDates) => {
+    // selectedDates is an array, we use the first item
+    const formattedDate = moment(selectedDates[0]).format('DD-MM-YYYY');
+    console.log(formattedDate);
+    setSelectedDate(formattedDate); // Update the selected date state
+    // If you need to dispatch to Redux
+    // dispatch(onFetchOrders(formattedDate));
+};
 
 
-  const removeFromCartOrders = (prod) => {
-      const updatedCartOrders = order[0].products.filter(
-        (item) => item.prodId !== prod.prodId
-      )
-      //if order exist update the order
-      const orderList = {
-        id: order[0]?.id,
-        date: order[0]?.date,
-        products: [...updatedCartOrders],
-      }
-    dispatch(onUpdateOrder(orderList))
-    const date = new Date().toLocaleDateString()
-    dispatch(onFetchOrders(date))
-  }
+  const removeFromCartOrders = (itemToRemove) => {
+    // Assuming 'orders' is your state that contains all orders
+    // and you're updating the first order in the array
+    const updatedCases = orders[0][user.store].cases.filter(item => item.id !== itemToRemove.id);
+
+    const updatedOrder = {
+        ...orders[0],
+        [user.store]: {
+            ...orders[0][user.store],
+            cases: updatedCases
+        }
+    };
+
+    // Now you need to update this order in Firebase
+    const orderDocRef = doc(db, 'orders1', orders[0].id); // Adjust with your collection name and order ID
+
+    updateDoc(orderDocRef, updatedOrder)
+        .then(() => {
+            console.log("Order updated successfully");
+
+            // Update the state to reflect the change
+            const updatedOrders = [...orders];
+            updatedOrders[0] = updatedOrder;
+            setOrders(updatedOrders); // Assuming setOrders is your state update function
+        })
+        .catch(error => {
+            console.error("Error updating order: ", error);
+        });
+};
+
+const handleSendEmail = async () => {
+
+        const htmlTable = createHtmlTable(orders);
+
+        const date = moment().format('DD-MM-YYYY')
+        const emailParams = {
+            date: date,
+            htmlContent: htmlTable,
+        }
+        const emailData = {
+          service_id: 'service_n40uhpq',
+          template_id: 'template_uhndxsr',
+          user_id: 'u9HKukohg-tvqGoxg',
+          template_params: emailParams,
+          // accessToken: 'YOUR_PRIVATE_KEY', // Uncomment if you need to use the Private Key
+        };
+      
+        try {
+          const response = await axios.post('https://api.emailjs.com/api/v1.0/email/send', JSON.stringify(emailData), {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          if (response.status === 200) {
+            console.log('Email sent successfully');
+          }
+        } catch (error) {
+          console.error('Failed to send email', error);
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        }
+        setMessage('Report sent successfully!');
+         setToast(true);
+        setTimeout(() => {
+          setToast(false);
+          setMessage('');
+        }, 3000);
+      };
+
+const createHtmlTable = (orders) => {
+    let htmlContent = '<table style="width:100%; border-collapse: collapse;">';
+    
+    // Extracting all store names
+    let stores = new Set();
+    orders.forEach(order => {
+        Object.keys(order).forEach(store => {
+            if (store !== 'date' && store !== 'id' && store !== 'remarks') {
+                stores.add(store);
+            }
+        });
+    });
+
+    stores.forEach(store => {
+        htmlContent += `<tr><th colspan="2" style="text-align: left; border-bottom: 1px solid #ddd; padding-left: 10px; font-weight: bold;">${store}</th></tr>`;
+
+        let caseTypes = new Set();
+        // Gather case types for each store
+        orders.forEach(order => {
+            if (order[store]) {
+                order[store].cases.forEach(item => {
+                    caseTypes.add(item.case);
+                });
+            }
+        });
+
+        caseTypes.forEach(caseType => {
+            htmlContent += `<tr><td colspan="2" style="text-align: left; padding-left: 30px; padding-top:20px; font-weight: bold;">${caseType}</td></tr>`;
+
+            orders.forEach(order => {
+                if (order[store]) {
+                    order[store].cases.filter(item => item.case === caseType).forEach(item => {
+                        const capitalizedModel = capitalizeFirstLetter(item.model);
+                        htmlContent += `<tr>
+                                            <td style="padding-left: 50px; padding-top:10px">${capitalizedModel}</td>
+                                            <td>${item.qty}</td>
+                                        </tr>`;
+                    });
+                }
+            });
+        });
+
+        // Space after each store
+        htmlContent += `<tr><td colspan="2" style="height: 20px;"></td></tr>`;
+    });
+
+    htmlContent += '</table>';
+    return htmlContent;
+};
+
+const capitalizeFirstLetter = (string) => {
+    return string.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+};
+
+
   
+
   return (
     <div className='page-content'>
       <div className='container-fluid'>
-        <Breadcrumbs title='SQUARE ONE' breadcrumbItem='Order List' />
+        <Breadcrumbs title={store} breadcrumbItem='Order List' />
         <Row>
           <Col lg={12}>
             <Card>
@@ -103,76 +215,41 @@ the `dispatch` function, which is used to dispatch actions to the Redux store. *
                         onChange={(e) => handleDateChange(e)}
                         options={{
                           altInput: true,
-                          altFormat: 'd/m/Y',
-                          dateFormat: 'd/m/Y',
+                          altFormat: 'd-m-Y',
+                          dateFormat: 'd-m-Y',
                         }}
                       />
                     </InputGroup>
                   </div>
                     <div>
-                      <select value={store}
-                       onChange={(e)=>setStore(e.target.value)} 
-                        className='form-select'
-                        >
-                        <option>BCC LL</option>
-                        <option>BCC UL</option>
-                        <option>EMTC</option>
-                        <option>EMTC CART</option>
-                        <option>SQUARE ONE</option>
-                        <option>TP1</option>
-                      </select>
+                    <Button color='primary mx-2' onClick={handleSendEmail}>
+                        Send Order
+                    </Button>
+
                     </div>
                 </div>
               </CardBody>
             </Card>
-            <Card>
-              <CardBody>
-                <h4 className='card-title'>Order List</h4>
-                {order && order.length > 0 ? (
-                <Table className='table'>
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Store</th>
-                      <th>Model</th>
-                      <th>Accessory</th>
-                      <th>Qty</th>
-                      <th>Date</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {order && orders?.map((item, index) => (
-                      <tr key={index}>
-                        <td>{index + 1}</td>
-                        <td>{item.store}</td>
-                        <td>{item.model}</td>
-                        <td>{item.cases}</td>
-                        <td>{item.quantity}</td>
-                        <td>{order[0]?.date}</td>
-                        <td>
-                          <Button
-                            color='danger'
-                            className='btn-sm'
-                            disabled={item.store !== user.store}
-                            onClick={() => removeFromCartOrders(item)}
-                          >
-                            <i className='bx bxs-trash'></i>
-                          </Button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </Table> ): (
-                  <div className='text-center'>
-                    <h4>No Orders Found</h4>
-                  </div>
-                )}
-              </CardBody>
-            </Card>
+            <div className='text-end'> 
+            <Toast 
+            isOpen={toast}
+        className="align-items-center text-white bg-primary border-0"
+            role="alert"
+            >
+            <div className="d-flex">
+                <ToastBody>
+                    {message}
+                </ToastBody>
+                <button onClick={() => setToast(false)} type="button" className="btn-close btn-close-white me-2 m-auto"
+                ></button>
+            </div>
+        </Toast>
+        </div>
+              <ModelDisplay orders = {orders} userStore={user.store} showTotals= {showTotals}/>
           </Col>
         </Row>
       </div>
+       
     </div>
   )
 }

@@ -42,6 +42,7 @@ import {
   where,
   orderBy
 } from 'firebase/firestore'
+import moment from 'moment'
 
 //Print Label
 import Barcode from './Barcode'
@@ -279,6 +280,7 @@ useEffect(() => {
           createdBy: employeeName,
           createdAt: new Date(),
           updatedAt: new Date(),
+          updatedDate: moment().format('DD-MM-YYYY')
           // model: model ? model : product.model,
         }
         // console.log(updatedData)

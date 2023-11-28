@@ -28,7 +28,7 @@ const getProducts = async (store) => {
     )
     console.log(prodQuery)
   }
-  const data = await getDocs(prodQuery)
+  const data = await getDocs(productCollectionRef)
   return data.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
 }
 const getAdminProducts = async () => {

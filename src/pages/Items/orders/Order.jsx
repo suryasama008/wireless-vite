@@ -1,395 +1,301 @@
-import React, { useState, useEffect } from 'react'
-import MUIDataTable from 'mui-datatables'
-import {
-  Button,
-  Row,
-  Col,
-  Card,
-  CardBody,
-  Table,
-} from 'reactstrap'
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
-import { connect } from 'react-redux'
-import { withRouter } from 'react-router-dom'
-import { withTranslation } from 'react-i18next'
-import Breadcrumbs from '../../../components/Common/Breadcrumb'
-import {cases, models, silicone} from  '../../../constants/models.js'
+import { Row, Col, Card, CardBody, CardTitle , Button} from 'reactstrap';
+import Breadcrumbs from '../../../components/Common/Breadcrumb';
+import { db } from '../../../helpers/firebase';
+import { collection, getDocs, where, query, doc, updateDoc, addDoc } from 'firebase/firestore';
+
+import moment from 'moment';
+
+// import { cases } from '../../../constants/models.js';
 import {
-  fetchOrders as onFetchOrders,
-  addNewOrders as onAddNewOrder,
-  updateOrders as onUpdateOrder,
-  deleteOrders as onDeleteOrder,
-} from '/src/store/actions'
-import moment from 'moment'
+    fetchOrders as onFetchOrders,
+    addNewOrders as onAddNewOrder,
+    updateOrders as onUpdateOrder,
+    deleteOrders as onDeleteOrder,
+  } from '/src/store/actions'
+const Order = () => {
+    const [cartItems, setCartItems] = useState([]);
+    const [selectedModel, setSelectedModel] = useState('');
+    const [cases, setCases] = useState([])
+    const [model, setModel] = useState('');
+    const [orders, setOrders] = useState([])
+    const [modelOptions, setModelOptions] = useState([]);
+    const [quantities, setQuantities] = useState({});
+  const [selectedDate, setSelectedDate] = useState(moment().format('DD-MM-YYYY'));
 
-const Order = ({ order,user }) => {
-  console.log(user)
-  const [orders, setOrders] = useState([])
-  const [cartOrders, setCartOrders] = useState([])
-  const [filteredProducts, setFilteredProducts] = useState([])
-  const [isOrdersSet, setIsOrdersSet] = useState(false)
-  const dispatch = useDispatch()
-
-  useEffect(() => {
-    const date = new Date().toLocaleDateString()
-      dispatch(onFetchOrders(date))
-  }, [dispatch])
-  
-    /* This `useEffect` hook is running whenever the `isOrdersSet` state changes. If `isOrdersSet` is
-    `true`, it calls the `filterAccessories` function with the argument `'Regular Glass'`. This is
-    likely used to initially filter the `orders` array by the default value of `'Regular Glass'`
-    when the component mounts and `isOrdersSet` is set to `true`. */
-  
+    const dispatch = useDispatch()
+    const user = useSelector((state) => state.users.user);
+    const modelCollectionRef = collection(db, 'models');
+    const orderCollectionRef = collection(db, 'orders1')
     useEffect(() => {
-      if (isOrdersSet) {
-        filterAccessories('Regular Glass')
-      }
-    }, [isOrdersSet])
+        const fetchModels = async () => {
+            const data = await getDocs(modelCollectionRef);
+            const models = data.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+            
+            let optionsMeetingCriteria = [];
+            const filteredModels = models[0].models.filter(model => 
+                model.label.toLowerCase().startsWith('a') || model.label.toLowerCase().startsWith('s')
+            );
 
-  useEffect(() => {
-     const date = new Date().toLocaleDateString()
-     dispatch(onFetchOrders(date))
-   }, [dispatch])
-  
-  //getorders from store
-  // const orderz = useSelector((state) => state)
-  // console.log(orderz)
-  
-/**
- * This function filters orders based on the type of case specified and sets the filtered products.
- */
- const filterAccessories = (value) => {
-   let filteredProducts
-   if (value === 'Silicone Case') {
-     filteredProducts = orders.filter((item) =>
-       item.cases.startsWith('Silicone')
-     )
-   } else {
-     filteredProducts = orders.filter((item) => item.cases === value)
-   }
-   setFilteredProducts(filteredProducts)
- }
-
-
-/**
- * This function removes an order from the cart and sets the quantity of the corresponding order in the
- * orders array to an empty string.
- */
-  const removeFromCartOrders = (order) => {
-    setCartOrders((prevCartOrders) => {
-      const updatedCartOrders = prevCartOrders.filter(
-        (item) => item.prodId !== order.prodId
-      )
-      return updatedCartOrders
-    })
-
-    setOrders((prevOrders) => {
-      const updatedOrders = prevOrders.map((item) => {
-        if (item.prodId === order.prodId) {
-          item.quantity = ''
-        }
-        return item
-      })
-      return updatedOrders
-    })
-  }
-
-/**
- * This function adds a product to the cart if it is not already in the cart.
- * @returns If the `prod` object already exists in the `cartOrders` array, nothing is returned (the
- * function exits early with a `return` statement). If the `prod` object does not exist in the
- * `cartOrders` array, the `cartOrders` state is updated by adding the `prod` object to the end of the
- * array, and the updated `cartOrders` array is returned
- */
-  const addToCartOrders = (prod) => {
-    const isProductInCart = cartOrders.find(
-      (item) => item.prodId === prod.prodId
-    )
-    if (isProductInCart) {
-      return
-    }
-    setCartOrders((prevCartOrders) => {
-      const updatedCartOrders = [...prevCartOrders, prod]
-      return updatedCartOrders
-    })
-  }
-
-
- /* This `useEffect` hook is creating an array of products based on the `models`, `cases`, and
- `silicone` arrays. It is then setting the state of `orders` to this array of products and setting
- the state of `isOrdersSet` to `true`. This hook only runs once when the component mounts, as it has
- an empty dependency array `[]`. */
-  useEffect(() => {
-    const prod = []
-    for (const model of models) {
-      for (const mod of model.models) {
-        for (const cas of cases) {
-          if (cas === 'Silicone') {
-            for (const color of silicone) {
-              const product = {
-                store: user.store,
-                prodId: `${mod}-${cas}-${color}`,
-                brand: model.brand,
-                cases: `${cas}-${color}`,
-                status: 'IN STOCK',
-                model: mod,
-                quantity: 1,
-                date: moment().format('DD-MM-YYYY')
-              }
-              prod.push(product)
-            }
-          } else {
-            const product = {
-              store: user.store,
-              prodId: `${mod}-${cas}`,
-              brand: model.brand,
-              cases: cas,
-              model: mod,
-              quantity: '',
-              date: moment().format('DD-MM-YYYY')
-            }
-            prod.push(product)
-          }
-        }
-      }
-    }
-    setOrders(prod)
-    setIsOrdersSet(true)
-  }, [])
-
-
- /**
-  * This function handles placing an order by creating an order object with the current date and the
-  * products in the cart, dispatching an action to place the order, and resetting the cart orders.
-  */
-
- console.log(new Date().toLocaleDateString())
-  const handlePlaceOrder = () => {
-//check id the a new file is created of that date in the orders folder and update the the esisting file if the file is already create for that date "order"
-    if (order && order.length > 0) {
-      //if order exist update the order
-      const orderList = {
-        id: order[0]?.id,
-        date: order[0].date,
-        products: [...order[0].products, ...cartOrders],
-      }
-      dispatch(onUpdateOrder(orderList))
-      setCartOrders([])
-      return
-    } 
-    const orderList = {
-      date: new Date().toLocaleDateString(),
-      products: cartOrders,
-    }
-    console.log(orderList)
-    dispatch(onAddNewOrder(orderList))
-    setCartOrders([])
-    // history.push('/')
-  }
-
-  const columns = [
-    {
-      name: 'brand',
-      label: 'Brand',
-      options: {
-        filter: true,
-      },
-    },
-
-    {
-      name: 'model',
-      label: 'Model',
-      sort: true,
-      sortDirection: 'asc',
-      options: {
-        filter: false,
-      },
-    },
-    {
-      name: 'cases',
-      label: 'Accessories',
-    },
-    {
-      name: 'quantity',
-      label: 'Qty',
-      options: {
-        customBodyRender: (value, tableMeta, updateValue) => {
-          const id = tableMeta.rowData[5]
-          const handleChange = (event) => {
-            const prod = orders.find((item) => item.prodId === id)
-            prod.quantity = event.target.value
-            setOrders((prevOrders) => {
-              const updatedOrders = prevOrders.map((item) => {
-                if (item.prodId === id ) {
-                  item.quantity = event.target.value
-                }
-                 
-                return item
-              })
-              return updatedOrders
+            filteredModels.forEach(model => {
+                model.options.forEach(option => {
+                    if (option.label.includes("IPHONE") || option.label.toLowerCase().startsWith('s') || option.label.toLowerCase().startsWith('a')) {
+                        optionsMeetingCriteria.push(option);
+                    }
+                });
+            });
+    
+                        // Sort the options
+                        optionsMeetingCriteria.sort((b, a) => a.label.localeCompare(b.label));
+    
+                        // Log sorted options
+                        optionsMeetingCriteria.forEach(option => console.log(option.label));
+    
+            setModelOptions(filteredModels);
+            // setModelOptions(models[0].models);
+            const caseItems = models[0].models.filter((item) => item.label === 'CASES')[0]
+            const caseOptions = caseItems.options.map((item) => {
+                return item.label
             })
-          }
+            setCases(caseOptions)
+        };
 
-          return (
-            <div className='d-flex' style={{ maxWidth: '100px' }}>
-              <input
-                className='form-control input-sm'
-                type='number'
-                size='sm'
-                value={value}
-                onChange={handleChange}
-              />
-            </div>
-          )
+        const fetchOrders = async () => {
+            const date = moment().format('DD-MM-YYYY')
+            const ordersQuery = query(orderCollectionRef, where('date', '==', date));
+            const data = await getDocs(ordersQuery);
+            const orders = data.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+            setOrders(orders)
+        }
+        fetchModels();
+        fetchOrders()
+        
+    }, [selectedDate]);
+    
+console.log(orders)
+
+const handleSendEmail = async (emailParams) => {
+    const emailData = {
+      service_id: 'service_n40uhpq',
+      template_id: 'template_tofrxi8',
+      user_id: 'u9HKukohg-tvqGoxg',
+      template_params: emailParams,
+      // accessToken: 'YOUR_PRIVATE_KEY', // Uncomment if you need to use the Private Key
+    };
+  
+    try {
+      const response = await axios.post('https://api.emailjs.com/api/v1.0/email/send', JSON.stringify(emailData), {
+        headers: {
+          'Content-Type': 'application/json',
         },
-      },
-    },
-    {
-      name: 'addToCartCheck',
-      label: 'ADD',
-      options: {
-        customBodyRender: (value, dataIndex, updateValue) => {
-          const id = dataIndex.rowData[5]
-          const cases = dataIndex.rowData[2]
-          const prod = orders.find((item) => item.prodId === id)
-          return (
-            <Button
-              color='primary'
-              className='btn-rounded'
-              onClick={() => addToCartOrders(prod)}
-            >
-              Add
-            </Button>
-          )
-        },
-      },
-    },
-
-    {
-      name: 'prodId',
-      label: 'N/A',
-      options: {
-        display: false,
-        filter: false,
-        sort: false,
-      },
-    },
-  ]
-
-  return (
-    <div className='page-content'>
-      <div className='container-fluid'>
-        <Breadcrumbs title='SQUARE ONE' breadcrumbItem='Order List' />
-        <Row>
-          <Col lg={12}>
-            <Card>
-              <CardBody>
-                <div className='d-flex justify-content-between'>
-                  <div className='d-flex'>
-                    <select
-                      defaultValue='0'
-                      className='form-select'
-                      //  style={{ border: 'none', outline: 'none' }}
-                      onChange={(e) => filterAccessories(e.target.value)}
-                    >
-                      <option value='Regular Glass'>Regular Glass</option>
-                      <option value='Top Glass'>Top Glass</option>
-                      <option value='Privacy Glass'>Privacy Glass</option>
-                      <option value='Silicone Case'>Silicone Case</option>
-                      <option value='Clear Case'>Clear Case</option>
-                      <option value='Punjab Case'>Punjab Case</option>
-                      <option value='OVO Case'>OVO Case</option>
-                      <option value='Jatt Life Case'>Jatt Life Case</option>
-                      <option value='Clear Coat'>Clear Coat</option>
-                    </select>
-                  </div>
-                  <Button
-                    to='#'
-                    // className='btn btn-success'
-                    color = 'primary'
-                    onClick={() => handlePlaceOrder()}
-                  >
-                    Place Order
-                  </Button>
-                </div>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={7}>
-            <MUIDataTable
-              data={filteredProducts}
-              columns={columns}
-              className='shadow-none table'
-              options={{
-                autoWidth: true,
-                responsive: 'standard',
-                scroll: { maxHeight: '500px' },
-                pagination: true,
-                tableLayout: 'auto',
-                selectableRows: 'none',
-                filter: false,
-                print: false,
-                download: false,
-                filterType: 'dropdown',
-                sort: true,
-                viewColumns: false,
-              }}
-            />
-          </Col>
-          <Col lg={5}>
-            <Card>
-              <CardBody>
-                <h4 className='card-title'>Order List</h4>
-                <Table className='table'>
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Model</th>
-                      <th>Accessory</th>
-                      <th>Qty</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {cartOrders.map((item, index) => (
-                      <tr key={index}>
-                        <td>{index + 1}</td>
-                        <td>{item.model}</td>
-                        <td>{item.cases}</td>
-                        <td>{item.quantity}</td>
-                        <td>
-                          <Button
-                            color='danger'
-                            className='btn-sm'
-                            onClick={() => removeFromCartOrders(item)}
-                          >
-                            <i
-                              className='bx bxs-trash'
-                            ></i>
-                          </Button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </Table>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-      </div>
-    </div>
-  )
-}
-
-const mapStatetoProps = state => {
-  return {
-    order:  state.orders.orders,
-    user: state.users.user
+      });
+      if (response.status === 200) {
+        console.log('Email sent successfully');
+      }
+    } catch (error) {
+      console.error('Failed to send email', error);
+    }
   };
+
+
+    useEffect(() => {
+        const newQuantities = cases.reduce((quantities, caseItem) => {
+            const cartItem = cartItems.find(item => item.id === `${model}_${caseItem}`);
+            quantities[`${model}_${caseItem}`] = cartItem ? cartItem.qty.toString() : ''; // Use an existing qty or set to default
+            return quantities;
+        }, {});
+    
+        setQuantities(newQuantities);
+    }, [model, cases, cartItems]); // Depend on model, cases, and cartItems
+    
+
+    const handleModelClick = (modelValue) => {
+        setModel(modelValue);
+        setSelectedModel(modelValue);
+    };
+
+    const updateOrCreateCartItem = (caseItem, quantity, isSelected = true) => {
+        const itemId = `${model}_${caseItem}`;
+        setCartItems(prevItems => {
+            const existingItemIndex = prevItems.findIndex(item => item.id === itemId);
+            if (existingItemIndex >= 0) {
+                let updatedItems = [...prevItems];
+                updatedItems[existingItemIndex] = { ...updatedItems[existingItemIndex], qty: isNaN(quantity) ? '' : quantity.toString(), isSelected };
+                return updatedItems;
+            } else {
+                return [...prevItems, { id: itemId, model, case: caseItem, qty: isNaN(quantity) ? '' : quantity.toString(), isSelected }];
+            }
+        });
+    };
+
+    const handleQuantityChange = (caseItem, newQuantity) => {
+        const newQuantities = { ...quantities, [`${model}_${caseItem}`]: newQuantity };
+        setQuantities(newQuantities);
+        // If the item is already in the cart, update its quantity
+        if (cartItems.some(item => item.id === `${model}_${caseItem}`)) {
+            updateOrCreateCartItem(caseItem, parseInt(newQuantity, 10));
+        }
+    };
+
+    const handleAddRemoveItem = (caseItem, isAdding) => {
+        if(model === '') return
+        const itemId = `${model}_${caseItem}`;
+        const quantity = quantities[itemId] || 1;
+        if (isAdding) {
+            updateOrCreateCartItem(caseItem, parseInt(quantity, 10));
+        } else {
+            setCartItems(prevItems => prevItems.filter(item => item.id !== itemId));
+        }
+    };
+
+  const getQuantity = (caseItem) => {
+    const quantity = quantities[`${model}_${caseItem}`];
+    return isNaN(quantity) ? '' : quantity.toString();
 };
-export default connect(
-  mapStatetoProps,
-  {}
-)(withRouter(withTranslation()(Order)));
+    
+
+const handlePlaceOrder = async () => {
+    if (orders.length === 0) {
+        // There are no existing orders, create a new one
+        const newOrder = {
+            date: selectedDate,
+            [user.store]: {
+                cases: cartItems
+            }
+        };
+
+        try {
+            // Add the new document
+            await addDoc(orderCollectionRef, newOrder);
+            console.log('New order added successfully');
+        } catch (error) {
+            console.error('Error adding new order: ', error);
+        }
+    } else {
+        // There are existing orders, update the existing one
+        const docRef = doc(db, 'orders1', orders[0].id);
+
+        // Preparing the updated data
+        const updatedOrders = {
+            ...orders[0],
+            [user.store]: {
+                ...orders[0][user.store],
+                cases: [...(orders[0][user.store]?.cases || []), ...cartItems]
+            }
+        };
+
+        try {
+            // Update the document
+            await updateDoc(docRef, updatedOrders);
+            console.log('Order updated successfully');
+        } catch (error) {
+            console.error('Error updating order: ', error);
+        }
+    }
+};
+
+
+
+    return (
+        <div className='page-content'>
+            <div className='container-fluid' style={{ maxHeight: '80vh', overflowY: 'auto', scrollbarWidth: 'none', cursor: "pointer" }}>
+                <div className='text-end py-3'>
+                <Button color='primary'  onClick = {handlePlaceOrder} >Place Order</Button>
+                </div>
+                {model === '' && <p style = {{color:'red'}}>***please Select Model***</p>}
+                <Row>
+                <Col lg={2} >
+            <Card className='mb-2'>
+    <CardTitle className='mb-0 p-3 border-bottom bg-light'>
+      <h5 className='mb-0'>Models</h5>
+    </CardTitle>
+    <CardBody>
+        <div style={{ maxHeight: '70vh',overflowY: 'auto', 
+            scrollbarWidth: 'none', cursor: "pointer" }}>{modelOptions.map((brand, brandIndex) => (
+        <div key={brandIndex}>
+          <h4>{brand.label}</h4>
+          {brand.options.map((option, optionIndex) => (
+            <div key={optionIndex} onClick={() => handleModelClick(option.value)} className='p-2' style={{ borderBottom: "1px solid black", 
+            backgroundColor: selectedModel === option.value ? '#556ee5' : 'transparent', color: selectedModel === option.value ? 'white' : 'black' }}>
+                {option.value}
+            </div>
+          ))}
+        </div>
+        ))}
+        </div>
+            </CardBody>
+       </Card>
+       </Col>
+       <Col lg={5}>
+       <Card className='mb-2'>
+    <CardTitle className='mb-0 p-3 border-bottom bg-light'>
+      <h5 className='mb-0'>Cases / Accessories</h5>
+    </CardTitle>
+    <CardBody>
+        <div className="" style={{ maxHeight: '70vh',overflowY: 'auto', 
+            scrollbarWidth: 'none', cursor: "pointer" }}>
+                <h5>model : {model}</h5>
+            {cases.map((caseItem, index) => (
+            <div key={index} className=' py-2' style = {{borderBottom: "1px solid black"}}>
+                <Row>
+                <Col lg={8}>
+                <div>{caseItem}</div>
+                </Col>
+                <Col ld={2}>
+                <input 
+                        type="text" 
+                        className='form-control'
+                        value={getQuantity(caseItem) || ''}
+                        placeholder='1'
+                        min={1} 
+                        onChange={(e) => handleQuantityChange(caseItem, e.target.value)}
+                    />
+                </Col>
+                <Col ld={2}>
+                <button 
+                        className='btn btn-icon'
+                        onClick={() => handleAddRemoveItem(caseItem, !cartItems.some(item => item.id === `${model}_${caseItem}`))}
+                    >
+                    {cartItems.some(item => item.id === `${model}_${caseItem}`) ? 
+                        <i className='bx bx-trash' style={{ color: 'red', fontSize: '1.5em' }}></i> : 
+                        <i className='bx bx-plus' style={{ color: 'green', fontSize: '1.5em' }}></i> 
+                    }
+                </button>
+                </Col>
+                </Row>
+            </div>
+          ))}
+          </div>
+    </CardBody>
+    </Card>
+       </Col>
+                    <Col lg={5}>
+                        <Card className='mb-2'>
+                            <CardTitle className='mb-0 p-3 border-bottom bg-light'>
+                                <h5 className='mb-0'>Cart Items</h5>
+                            </CardTitle>
+                            <CardBody>
+                                <div style={{ maxHeight: '70vh',overflowY: 'auto', 
+                                     scrollbarWidth: 'none', cursor: "pointer" }}>
+                                {cartItems.map((item, index) => (
+                                    <div key={item.id} className='py-2' style={{ borderBottom: "1px solid black" }}>
+                                        <Row>
+                                            <Col lg={2}> {index + 1}</Col>
+                                            <Col lg={4}>{item.model}</Col>
+                                            <Col lg={4}>{item.case}</Col>
+                                            <Col lg={2}>{item.qty}</Col>
+                                        </Row>
+                                    </div>
+                                ))}
+                                </div>
+                            </CardBody>
+                        </Card>
+                    </Col>
+                </Row>
+            </div>
+        </div>
+    );
+};
+
+export default Order;

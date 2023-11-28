@@ -1,0 +1,160 @@
+import React, { useState, useEffect } from 'react'
+import MUIDataTable from 'mui-datatables'
+import {
+  Button,
+  Row,
+  Col,
+  Card,
+  CardBody,
+  CardTitle,
+  Table,
+} from 'reactstrap'
+import { useSelector, useDispatch } from 'react-redux'
+import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
+import { withTranslation } from 'react-i18next'
+import Breadcrumbs from '../../../components/Common/Breadcrumb'
+import {cases} from  '../../../constants/models.js'
+import {
+  fetchOrders as onFetchOrders,
+  addNewOrders as onAddNewOrder,
+  updateOrders as onUpdateOrder,
+  deleteOrders as onDeleteOrder,
+} from '/src/store/actions'
+import moment from 'moment'
+
+import { auth, db } from '../../../helpers/firebase'
+import {
+  collection,
+  getDocs,
+  getDoc,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+  query,
+  where,
+  orderBy
+} from 'firebase/firestore'
+const Order = () => {
+    const [cartItems, setCartItems] = useState([]);
+    const [model, setModel] = useState('')
+
+    const [modelOptions, setModelOptions] = useState([])
+    const modelCollectionRef = collection(db, 'models')
+
+    const getModels = async () => {
+      const data = await getDocs(modelCollectionRef)
+      var models = []
+      data.docs.map((doc) => {
+        const temp = { ...doc.data(), id: doc.id }
+        models.push(temp)
+      })
+      setModelOptions(models[0].models)
+      return models
+    }
+
+    console.log(cases)
+
+    useEffect(() => {
+        getModels()
+        const unsubscribe = () => {
+          getModels()
+        }
+        return unsubscribe
+      
+      }, [])
+
+
+      const handleQuantityChange = (caseItem, newQuantity) => {
+        setCartItems(prevItems => prevItems.map(item => 
+          item.case === caseItem ? { ...item, quantity: parseInt(newQuantity, 10) } : item
+        ));
+      };
+      
+      const handleCheckboxChange = (caseItem, id) => {
+        setCartItems(prevItems => {
+          const existingItem = prevItems.find(item => item.case === caseItem);
+          if (existingItem) {
+            return prevItems.filter(item => item.case !== caseItem);
+          } else {
+            return [...prevItems, { id: id, model: 'iphone 14', case: caseItem, quantity: 1, selected: true }];
+          }
+        });
+      };
+      console.log(cartItems)
+
+  return (
+    <div className='page-content'>
+     <div className='container-fluid' style = {{maxHeight: '80vh',overflowY: 'auto', 
+            scrollbarWidth: 'none', cursor: "pointer"  }}>
+        <Breadcrumbs title='SQUARE ONE' breadcrumbItem='Order List' />
+        <Row>
+            <Col lg={3} >
+            <Card className='mb-2'>
+    <CardTitle className='mb-0 p-3 border-bottom bg-light'>
+      <h5 className='mb-0'>Models</h5>
+    </CardTitle>
+    <CardBody>
+        <div style={{ maxHeight: '70vh',overflowY: 'auto', 
+            scrollbarWidth: 'none', cursor: "pointer" }}>{modelOptions.map((brand, brandIndex) => (
+        <div key={brandIndex}>
+          <h4>{brand.label}</h4>
+          {brand.options.map((option, optionIndex) => (
+            <div key={optionIndex} className=' py-2' style = {{borderBottom: "1px solid black"}}>
+                <button style = {{background:'none', border:'none'}} onClick={()=> setModel(option.value)}>{option.value}</button>
+            </div>
+          ))}
+        </div>
+        ))}
+        </div>
+            </CardBody>
+       </Card>
+       </Col>
+       <Col lg={5}>
+       <Card className='mb-2'>
+    <CardTitle className='mb-0 p-3 border-bottom bg-light'>
+      <h5 className='mb-0'>Cases / Accessories</h5>
+    </CardTitle>
+    <CardBody>
+        <div className="" style={{ maxHeight: '70vh',overflowY: 'auto', 
+            scrollbarWidth: 'none', cursor: "pointer" }}>
+                <h5>model : {model}</h5>
+{cases.map((caseItem, index) => (
+            <div key={index} className=' py-2' style = {{borderBottom: "1px solid black"}}>
+                <Row>
+                <Col lg={8}>
+                <div>{caseItem}</div>
+                </Col>
+                <Col ld={2}>
+                <input 
+                    type="number" 
+                    className='form-control'
+                    defaultValue={1} 
+                    min={1} 
+                    onChange={(e) => handleQuantityChange(caseItem, e.target.value, `quantity_${caseItem}`)}
+                    />
+                </Col>
+                <Col ld={2}>
+                <input 
+                    type="checkbox" 
+                    onChange={(e) => handleCheckboxChange(caseItem,`quantity_${caseItem}`)} 
+                />
+                </Col>
+                </Row>
+            </div>
+          ))}
+          </div>
+    </CardBody>
+    </Card>
+       </Col>
+       <Col lg = {4}>
+       
+       </Col>
+        </Row>
+        </div>
+    </div>
+  )
+}
+
+export default Order

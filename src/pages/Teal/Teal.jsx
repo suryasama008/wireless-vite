@@ -1,425 +1,357 @@
-import React, { useState, useRef, useEffect } from 'react'
-import { useSelector, useDispatch, connect } from 'react-redux'
-import {
-    Button,
-    Card,
-    CardBody,
-    CardHeader,
-    Modal,
-    ModalBody,
-    ModalFooter,
-    ModalHeader,
-    Table,
-    Input,
-    Row,
-    Col,
-    Form,
-    Label,
-    InputGroup,
-  } from 'reactstrap'
-  import { auth, db } from '../../helpers/firebase'
-import {
-  collection,
-  getDocs,
-  getDoc,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  doc,
-  query,
-  where,
-  orderBy
-} from 'firebase/firestore'
-import { teal } from '@mui/material/colors'
+// Cases.js
+import React, { useState, useEffect, useCallback } from 'react';
+import axios from 'axios';
+import { Row, Col, Toast,
+  ToastHeader,
+  ToastBody, } from 'reactstrap';
+import TealData from './TealData.jsx';
+import SalesSummary from './SalesSummary';
+import TodaysSales from './TodaysSales';
+import { useSelector } from 'react-redux';
+import moment from 'moment';
+import { db } from '../../helpers/firebase';
+import { collection, getDocs, where, query, doc, updateDoc, addDoc } from 'firebase/firestore';
 const Teal = () => {
-    const [employeeId, setEmployeeId] = useState('')
-    const [employeeName, setEmployeeName] = useState('')
-    const [employees, setEmployees] = useState([])
-    const [store, setStore] = useState('')
-    const [tealData, setTealData] = useState({
-        hundred: 0,
-        fifty: 0,
-        twenty: 0,
-        ten: 0,
-        five: 0,
-        one: 0,
-        two: 0,
-        twentyFiveCents:0,
-        tenCents: 0,
-        fiveCents: 0,
-    })
-    const [total, setTotal] = useState(0)
-    const user = useSelector((state) => state.users.user)
-    useEffect(() => { 
-        setStore(user.store)
-    }, [user])
-    const employeeCollectionRef = collection(db, 'employees')
-    const handleEmployeeIdChange = (id) => {
-        setEmployeeId(id)
-      const employee = employees.find((employee) => employee.empId === id)
-        if (employee) {
-          setEmployeeName(employee.name)
-        } else {
-          setEmployeeName('')
+  const [toast, setToast] = useState(false);
+  const [message, setMessage] = useState('')
+  const [isSendSummary, setIsSendSummary] = useState(false)
+  const [selectedDate, setSelectedDate] = useState(moment().format('DD-MM-YYYY'));
+  const toggleToast = () => {
+      setToast(!toast);
+  };
+
+  const [data, setData] = useState({
+    store: '',
+    tealData: { storeCash: 0,
+      hundred: 0,
+      fifty: 0,
+      twenty: 0,
+      ten: 0,
+      five: 0,
+      two: 0,
+      one: 0,
+      twentyFiveCents: 0,
+      tenCents: 0,
+      fiveCents: 0,},
+    salesSummary: {  
+      cash: '',
+      card: '',
+      itemsSold: '',
+      phones: '',
+      repairs: '',
+      expenses: '',
+      expensesList: '',},
+    todaysItems: [],
+    employees: []
+  });
+
+  const user = useSelector((state) => state.users.user);
+
+  const fetchData = useCallback(async (date = moment().format('DD-MM-YYYY')) => {
+    setData((prevData) => ({
+        ...prevData,
+        store: user.store
+      }));
+      const employeeCollectionRef = collection(db, 'employees');
+      const employeeData = await getDocs(employeeCollectionRef);
+      const employees = employeeData.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+      const productCollectionRef = collection(db, 'products');
+      const today = moment().format('DD-MM-YYYY');
+      const soldQuery = query(productCollectionRef, where('soldDate', '==', date), where('store', '==', user.store));
+      const productData = await getDocs(soldQuery);
+      const todaysItems = productData.docs.map(doc => ({ id: doc.id,paymentMethod: 'Payment', ...doc.data() }));
+
+      const tealAmountCollectionRef = collection(db, 'teal')
+      const tealQuery = query(tealAmountCollectionRef, where('store', '==', user.store));
+      const tealAmount = await getDocs(tealQuery);
+      const tealData = tealAmount.docs.map(doc => ({ id: doc.id, ...doc.data() }))[0]
+      const saleSummaryCollectionRef = collection(db, 'salessummary')
+      const salesSummaryQuery = query(saleSummaryCollectionRef, where('date', '==', date));
+      const salesSummaryDocs = await getDocs(salesSummaryQuery);
+      const saleSumaryData = salesSummaryDocs.docs.map(doc => ({ id: doc.id, ...doc.data()}));
+      if (!salesSummaryDocs.empty) {
+        const salesSummaryData = salesSummaryDocs.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        const storeSalesSummary = salesSummaryData.find(summary => summary[user.store]);
+        if (storeSalesSummary) {
+          // Update the state to hold the sales summary for the current store
+          setData((prevData) => ({
+            ...prevData,
+            salesSummary: storeSalesSummary[user.store]
+          }));
         }
-      }
-console.log(store)
-      const getEmployees = async () => {
-        const data = await getDocs(employeeCollectionRef)
-        var employees = []
-        data.docs.map((doc) => {
-          const temp = { ...doc.data(), id: doc.id }
-          employees.push(temp)
-        })
-        return employees
-      }
-      const tealCollectionRef = collection(db, 'teal')
-      const getTealData = async () => {
-          const data = await getDocs(tealCollectionRef)
-          var teal = []
-          data.docs.map((doc) => {
-            const temp = { ...doc.data(), id: doc.id }
-            teal.push(temp)
-          })
-          const filteredData = teal.filter((item) => item.store === store)
-          setTealData(filteredData[0])
-          console.log(filteredData[0])
-          return filteredData
-        }
-    
-
-    useEffect(() => {
-        getTealData()
-        getEmployees().then((emp) => {
-            setEmployees(emp)
+      } else {
+        // Handle the case when there is no document for the selected date
+        // Possibly reset the salesSummary or handle it accordingly
+        setData((prevData) => ({
+          ...prevData,
+          salesSummary: { // reset to default values or handle as needed
+            cash: '',
+            card: '',
+            itemsSold: '',
+            phones: '',
+            repairs: '',
+            expenses: '',
+            expensesList: '',
           }
-          )
-          const unsubscribe = () => {
-            getEmployees()
-          }
-          return unsubscribe
-    }, [store])
-
-    useEffect(() => {
-        const totalCount = tealData && tealData.hundred * 100 + tealData.twenty * 20 + tealData.five * 5 + tealData.one * 1 + tealData.two * 2 + tealData.twentyFiveCents * 0.25 + tealData.tenCents * 0.1 + tealData.fiveCents * 0.05
-        console.log(totalCount)
-        setTotal(totalCount)
-
-    }, [tealData])
-
-    const handleSave = async () => {
-      const updatedTeal = {
-        ...tealData,
-        hundred: tealData.hundred,
-        fifty: tealData.fifty,
-        twenty: tealData.twenty,
-        ten: tealData.ten,
-        five: tealData.five,
-        one: tealData.one,
-        two: tealData.two,
-        twentyFiveCents: tealData.twentyFiveCents,
-        tenCents: tealData.tenCents,
-        fiveCents: tealData.fiveCents,
-        empName: employeeName,
-        empId: employeeId,
-        total: total,
-        date: new Date().toLocaleDateString(),
-        time: new Date().toLocaleTimeString('en-US', { hour12: true }),
-        store: user.store,
+        }));
       }
-      try {
-        const tealCollectionRef = collection(db, 'teal')
-        const userDoc = doc(tealCollectionRef, tealData.id)
-        await updateDoc(userDoc, updatedTeal)
-      } catch (error) {
-        console.error('Error adding document: ', error)
+      setData((prevData) => ({
+        ...prevData,
+        employees,
+        todaysItems,
+        tealData,
+      }));
+
+  }, [user.store]);
+
+  const handleDateChange = useCallback((newDate) => {
+    setSelectedDate(newDate);
+    fetchData(newDate); // Fetch data for the new date
+  }, [fetchData]);
+
+  useEffect(() => {
+    // Call fetchData when the component mounts or when the user.store changes
+    fetchData(selectedDate);
+  }, [fetchData, selectedDate, user.store]);
+
+  const handleSendEmail = async (emailParams) => {
+    const emailData = {
+      service_id: 'service_n40uhpq',
+      template_id: 'template_tofrxi8',
+      user_id: 'u9HKukohg-tvqGoxg',
+      template_params: emailParams,
+      // accessToken: 'YOUR_PRIVATE_KEY', // Uncomment if you need to use the Private Key
+    };
+  
+    try {
+      const response = await axios.post('https://api.emailjs.com/api/v1.0/email/send', JSON.stringify(emailData), {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (response.status === 200) {
+        console.log('Email sent successfully');
       }
-        const data = await getDoc(doc(db, 'teal', 'teal'))
-        console.log(tealData)
-        setEmployeeId('')
-        setEmployeeName('')
-        getTealData()
+    } catch (error) {
+      console.error('Failed to send email', error);
     }
+  };
+
+  const handleTealDataChange = useCallback((newTealData) => {
+    setData((prevData) => ({
+      ...prevData,
+      tealData: newTealData
+    }));
+  }, []);
+
+  const handleSalesSummaryChange = useCallback((newSalesSummary) => {
+    setData((prevData) => ({
+      ...prevData,
+      salesSummary: newSalesSummary
+    }));
+  }, []);
+
+  const handleTodaysItemsRemove = useCallback((itemId) => {
+    setData((prevData) => ({
+      ...prevData,
+      todaysItems: prevData.todaysItems.filter((item) => item.id !== itemId)
+    }));
+  }, []);
+
+  const handlePaymentMethodChange = useCallback((itemId, paymentMethod) => {
+    setData((prevData) => ({
+      ...prevData,
+      todaysItems: prevData.todaysItems.map((item) => 
+        item.id === itemId ? { ...item, paymentMethod } : item
+      )
+    }));
+  }, []);
+
+  const handleSave = useCallback(async () => {
+    const updatedTealData = {
+      ...data.tealData,
+      date: new Date().toLocaleDateString(),
+    }
+    try {
+      const tealCollectionRef = collection(db, 'teal');
+      const userDoc = doc(tealCollectionRef, data.tealData.id);
+      updateDoc(userDoc, updatedTealData);
+      setMessage('Till Updated Successfully!');
+      setToast(true); // Show the toast
+      // Set a timer to hide the toast after 3 seconds
+      setTimeout(() => {
+        setToast(false);
+      }, 3000); // 3000 milliseconds = 3 seconds
+    } catch (error) {
+      console.error('Error adding document: ', error);
+      setMessage('Error updating till!'); // Set an error message
+      setToast(true); // Show the toast
+      // Set a timer to hide the toast after 3 seconds even on error
+      setTimeout(() => {
+        setToast(false);
+        setMessage('')
+      }, 3000);
+    }
+  }, [data.tealData, data.tealData.id]);
+
+  const handleSendSalesEmail = useCallback( async () => {
+    try {
+      // const tealCollectionRef = collection(db, 'teal');
+      // const userDoc = doc(tealCollectionRef, data.tealData.id);
+      // updateDoc(userDoc, updatedTealData);
+      setMessage('Report sent successfully!');
+
+      const formattedExpensesList = data.salesSummary.expensesList
+      .split('\n')
+      .map((line) => `          ${line}`)
+      .join('\n');
+      const formattedItemsList = data.todaysItems.map((item) => 
+      `          CAD $ ${item.soldPrice}  -  ${item.model} (${item.condition})  -  ${item.color}`
+    ).join('\n');
+
+      setToast(true); // Show the toast
+  
+      // Format the sales summary message
+      const formattedSalesSummary = `
+                  ${user.store}
+                ${selectedDate}
+              Sales Summary
+        - Cash: ${data.salesSummary.cash}
+        - Card: ${data.salesSummary.card}
+        - Total: ${parseFloat(data.salesSummary.cash) + parseFloat(data.salesSummary.card)}
+        - Items Sold: ${data.salesSummary.itemsSold}
+        - Phones: ${data.salesSummary.phones}
+        - Repairs: ${data.salesSummary.repairs}
+        - Expenses: ${data.salesSummary.expenses}
+        - Expenses List: \n ${formattedExpensesList}
+        - Items Sold List: \n${formattedItemsList}
+      `;
+
+      console.log(formattedSalesSummary)
+
+      const emailParams = {
+        // Define your template params here
+        // example:
+        store: user.store,
+        date: selectedDate,
+        message: formattedSalesSummary,
+      };
+      await handleSendEmail(emailParams);
+      handleSendEmailToggle()
+  
+      // Set a timer to hide the toast after 3 seconds
+      setTimeout(() => {
+        setToast(false);
+      }, 3000); // 3000 milliseconds = 3 seconds
+    } catch (error) {
+      console.error('Error adding document: ', error);
+      // setMessage('Error updating till!'); // Set an error message
+      setToast(true); // Show the toast
+      // Set a timer to hide the toast after 3 seconds even on error
+      setTimeout(() => {
+        setToast(false);
+        setMessage('');
+      }, 3000);
+    }
+  }, [data.tealData, data.tealData.id, data.salesSummary, selectedDate, user.store]);
+  
+  const handleSaveSalesSummary = useCallback(async () => {
+    const salesSummaryCollectionRef = collection(db, 'salessummary');
+    const date = moment().format('DD-MM-YYYY');
+    // Create a query to find documents with the selected date
+    const q = query(salesSummaryCollectionRef, where('date', '==', date));
+    
+    try {
+      const querySnapshot = await getDocs(q);
+      if (querySnapshot.empty) {
+        // If there is no document for the selected date, create a new one
+        const newDocData = {
+          date: date,
+          [user.store]: data.salesSummary
+        };
+        await addDoc(salesSummaryCollectionRef, newDocData);
+      } else {
+        // If there is a document, update only the current store's data
+        const docRef = querySnapshot.docs[0].ref;
+        const existingData = querySnapshot.docs[0].data();
+        const updatedStoreData = {
+          ...existingData,
+          [user.store]: data.salesSummary // Update only the current store's data
+        };
+        await updateDoc(docRef, updatedStoreData);
+      }
+      setMessage('Data saved successfully!');
+    } catch (error) {
+      console.error('Error saving data: ', error);
+      setMessage('Data not saved!');
+    }
+    
+    setToast(true);
+    setTimeout(() => {
+      setToast(false);
+      setMessage('');
+    }, 3000);
+  }, [data.salesSummary, selectedDate, user.store]);
+  
+  const handleSendEmailToggle = () => {
+    setIsSendSummary(true)
+  }
+
+  const handlePrint = useCallback(() => {
+    // Implement print functionality here
+  }, [data]);
 
   return (
     <div className='page-content'>
-              <Card>
-                    <CardBody>
-                        <div className='d-flex justify-content-between'>
-                        <h2>Till</h2>
-                        <div className='d-flex'>
-                          <h5 className='me-4 mt-2'>Total</h5>
-                        <Button color='success' className='mb-4'>$ {total}</Button>
-                        </div>
-                        </div>
-                        <Row >
-                            <Col md='6'>
-                        <div className='d-flex'>
-                        <label
-                            htmlFor='example-text-input'
-                            className='col-form-label col-md-3'
-                        >
-                            Emp Id
-                        </label>
-                         <div className=''>
-                            <input
-                            className='form-control'
-                            type='number'
-                            placeholder='Emp Id'
-                            id='formrow-employeeId-Input'
-                            value={employeeId}
-                            onChange={(e) => handleEmployeeIdChange(e.target.value)}
-                        />
-                            </div>
-                        </div>
-                        <div className='d-flex mt-4'>
-                        <label
-                            htmlFor='example-text-input'
-                            className='col-form-label col-md-3'
-                        >
-                            100 $
-                        </label>
-                         <div className='d-flex'>
-                            <input
-                            className='form-control'
-                            type='string'
-                            placeholder='100 $'
-                            value = {tealData?.hundred }
-                            onChange = {(e) => setTealData({...tealData, hundred: e.target.value})}
-                            />
-                            <input className='form-control ms-1' 
-                            value={(tealData?.hundred * 100) + ' $'} 
-                            placeholder='X 100 $'
-                            readOnly/>
-                            </div>
-                        </div>
-                         
-                        <div className='d-flex mt-4'>
-                        <label
-                            htmlFor='example-text-input'
-                            className='col-form-label col-md-3'
-                        >
-                            20 $
-                        </label>
-                         <div className='d-flex'>
-                            <input
-                            className='form-control'
-                            type='number'
-                            placeholder='20 $'
-                            value = {tealData?.twenty}
-                            onChange = {(e) => setTealData({...tealData, twenty: e.target.value})}
-                            />
-                            <input className='form-control ms-1' 
-                            value={(tealData?.twenty * 20) + ' $'}
-                            placeholder='X 20 $'
-                            readOnly/>
-                            </div>
-                        </div>
-                        <div className='d-flex mt-4'>
-                        <label
-                            htmlFor='example-text-input'
-                            className='col-form-label col-md-3'
-                        >
-                            5 $
-                        </label>
-                         <div className='d-flex'>
-                            <input
-                            className='form-control'
-                            type='number'
-                            value = {tealData?.five}
-                            placeholder='5 $'
-                            onChange = {(e) => setTealData({...tealData, five: e.target.value})}
-                            />
-                            <input className='form-control ms-1' 
-                            placeholder='X 5 $'
-                            value={(tealData?.five * 5) + ' $'}
-                           readOnly/>
-                            </div>
-                        </div>
-                        <div className='d-flex mt-4'>
-                        <label
-                            htmlFor='example-text-input'
-                            className='col-form-label col-md-3'
-                        >
-                            1 $
-                        </label>
-                         <div className='d-flex'>
-                            <input
-                            className='form-control'
-                            type='number'
-                            placeholder='1 $'
-                            value = {tealData?.one}
-                            onChange = {(e) => setTealData({...tealData, one: e.target.value})}
-                            />
-                            <input className='form-control ms-1'
-                            placeholder='X 1 $'
-                            value={(tealData?.one * 1) + ' $'}
-                           readOnly/>
-                            </div>
-                        </div>
-
-                        <div className='d-flex mt-4'>
-                        <label
-                            htmlFor='example-text-input'
-                            className='col-form-label col-md-3'
-                        >
-                            0.10 $
-                        </label>
-                         <div className='d-flex'>
-                            <input
-                            className='form-control'
-                            type='number'
-                            placeholder='0.10 $'
-                            value = {tealData?.tenCents}
-                            onChange = {(e) => setTealData({...tealData, tenCents: e.target.value})}
-                            />
-                            <input className='form-control ms-1'
-                            placeholder='X 0.10 $'
-                            value={(tealData?.tenCents * 0.1) + ' $'}
-                            readOnly/>
-                            </div>
-                        </div>
-                        </Col>
-
-
-                        <Col md='6' className=''>    
-                        <div className='d-flex '>
-                        <label
-                            htmlFor='example-text-input'
-                            className='col-form-label col-md-4'
-                        >
-                            Emp Name
-                        </label>
-                         <div className=''>
-                            <input
-                            className='form-control'
-                            disabled
-                            placeholder='Emp Name'
-                            value={employeeName}
-                            readOnly
-                            />
-                            </div>
-                        </div>
-                        <div className='d-flex mt-4'>
-                        <label
-                            htmlFor='example-text-input'
-                            className='col-form-label col-md-3'
-                        >
-                            50 $
-                        </label>
-                         <div className='d-flex'>
-                            <input
-                            className='form-control'
-                            type='number'
-                            placeholder='50 $'
-                            value = {tealData?.fifty}
-                            onChange = {(e) => setTealData({...tealData, fifty: e.target.value})}
-                            />
-                            <input className='form-control ms-1' 
-                            placeholder='X 50 $'
-                            value={(tealData?.fifty * 50) + ' $'}
-                            readOnly/>
-                            </div>
-                        </div>
-                        <div className='d-flex mt-4'>
-                        <label
-                            htmlFor='example-text-input'
-                            className='col-form-label col-md-3'
-                        >
-                            10 $
-                        </label>
-                         <div className='d-flex'>
-                            <input
-                            className='form-control'
-                            type='number'
-                            placeholder='10 $'
-                            value = {tealData?.ten}
-                            onChange = {(e) => setTealData({...tealData, ten: e.target.value})}
-                            />
-                            <input className='form-control ms-1' 
-                            placeholder='X 10 $'
-                            value={(tealData?.ten * 10) + ' $'}
-                            readOnly/>
-                            </div>
-                        </div>
-
-                        <div className='d-flex mt-4'>
-                        <label
-                            htmlFor='example-text-input'
-                            className='col-form-label col-md-3'
-                        >
-                            2 $
-                        </label>
-                         <div className='d-flex'>
-                            <input
-                            className='form-control'
-                            type='number'
-                            placeholder='2 $'
-                            value = {tealData?.two}
-                            onChange = {(e) => setTealData({...tealData, two: e.target.value})}
-                            />
-                            <input className='form-control ms-1' 
-                            placeholder='X 2 $'
-                            value={(tealData?.two * 2) + ' $'}
-                            readOnly/>
-                            </div>
-                        </div>
-
-                        <div className='d-flex mt-4'>
-                        <label
-                            htmlFor='example-text-input'
-                            className='col-form-label col-md-3'
-                        >
-                            0.25 $
-                        </label>
-                         <div className='d-flex'>
-                            <input
-                            className='form-control'
-                            type='number'
-                            placeholder='0.25 $'
-                            value = {tealData?.twentyFiveCents}
-                            onChange = {(e) => setTealData({...tealData, twentyFiveCents: e.target.value})}
-                            />
-                            <input className='form-control ms-1' 
-                            placeholder='X 0.25 $'
-                            value={(tealData?.twentyFiveCents * 0.25) + ' $'}
-                            readOnly/>
-                            </div>
-                        </div>
-                        <div className='d-flex mt-4'>
-                        <label
-                            htmlFor='example-text-input'
-                            className='col-form-label col-md-3'
-                        >
-                            0.05 $
-                        </label>
-                         <div className='d-flex'>
-                            <input
-                            className='form-control'
-                            type='number'
-                            placeholder='0.05 $'
-                            value = {tealData?.fiveCents}
-                            onChange = {(e) => setTealData({...tealData, fiveCents: e.target.value})}
-                            />
-                            <input className='form-control ms-1' 
-                            placeholder='X 0.05 $'
-                            value={(tealData?.fiveCents * 0.05).toFixed(2) + ' $'}
-                            readOnly/>
-                            </div>
-                        </div>
-                        </Col>
-                        </Row>
-                        <div className='mt-4'>
-                          <p className = 'font-style-italic'>Last Updated :  {tealData?.date} at {tealData?.time} </p>
-                          <p>Updated By: {tealData?.empName}</p>
-                          </div>
-                        <div className='d-flex justify-content-center'>
-                    <Button className='mt-4' color='primary' onClick = {handleSave}>Submit</Button>
-                    </div>
-                    </CardBody>
-                </Card>
+      <Row>
+        <Col lg={4}>
+          <TodaysSales
+            items={data.todaysItems}
+            onItemRemove={handleTodaysItemsRemove}
+            summary={data.salesSummary}
+            onSummaryChange={handleSalesSummaryChange}
+            onPaymentMethodChange={handlePaymentMethodChange}
+            onDateChange={handleDateChange}
+            onSave = {handleSaveSalesSummary}
+            onSendEmail = {handleSendSalesEmail}
+          />
+        </Col>
+        <Col lg={4}>
+          <SalesSummary
+            todaysItems={data.todaysItems}
+            summary={data.salesSummary}
+            onSummaryChange={handleSalesSummaryChange}
+            onPrint={handlePrint}
+            store = {user?.store}
+            isSendSummary = {isSendSummary}
+          />
+        </Col>
+        <Col lg={4}>
+          <TealData
+            tealData={data.tealData}
+            onTealDataChange={handleTealDataChange}
+            onSave={handleSave}
+          />
+        </Col>
+      </Row>
+      <div aria-live="polite" aria-atomic="true">
+        <Toast 
+            isOpen={toast}
+        className="align-items-center text-white bg-primary border-0"
+            role="alert"
+            >
+            <div className="d-flex">
+                <ToastBody>
+                    {message}
+                </ToastBody>
+                <button onClick={() => setToast(false)} type="button" className="btn-close btn-close-white me-2 m-auto"
+                ></button>
+            </div>
+        </Toast>
+        </div>
     </div>
-  )
-}
+  );
+};
 
-export default Teal
+export default Teal;

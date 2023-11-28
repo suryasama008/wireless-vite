@@ -88,6 +88,7 @@ import DashboardSaas from "../pages/Dashboard/index";
 import DashboardCrypto from "../pages/Dashboard-crypto/index";
 import Blog from "../pages/Dashboard-Blog/index";
 import DashboardJob from "../pages/DashboardJob/index"
+import AllStore from "../pages/Dashboard-saas/AllStore";
 
 // //Crypto
 import CryptoWallet from "../pages/Crypto/CryptoWallet/crypto-wallet";
@@ -145,6 +146,7 @@ import ItemSearch from "../pages/Items/ItemList/ItemSearch";
 import ProductSell from "../pages/Dashboard-saas/ProductSell";
 import ProductForm from "../pages/Items/ItemList/ProductForm";
 import ProductEdit from "../pages/Items/ItemList/ProductEdit";
+import Cases from '../pages/Items/ItemList/Cases';
 
 //Orders
 import Order from "../pages/Items/orders/Order";
@@ -219,6 +221,8 @@ const authProtectedRoutes = [
   { path: '/dashboard-crypto', component: DashboardCrypto },
   { path: '/blog', component: Blog },
   { path: '/dashboard-job', component: DashboardJob },
+  { path: '/all-store', component: AllStore },
+  
 
   {path: '/add-value', component: AddValue},
   //   //Crypto
@@ -235,6 +239,7 @@ const authProtectedRoutes = [
   { path: '/product-sell/:id', component: ProductSell },
   { path: '/product-form', component: ProductForm},
   { path : '/product-edit/:id', component : ProductEdit},
+  { path : '/cases',component : Cases },
 
   //Order
   { path: '/orders', component: Order },
