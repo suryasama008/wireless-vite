@@ -234,7 +234,7 @@ console.log(data.repairsList)
     - Phones: ${data.salesSummary.phones}
     - Repairs: ${data.salesSummary.repairs}
     - Expenses: ${parseFloat(data.salesSummary.expenses).toFixed(2)}
-    - Remarks: \n ${formattedExpensesList}
+    - Remarks: \n ${formattedExpensesList}git commit -m "Updated sales summary and added email updates feature"git commit -m "Updated sales summary and added email updates feature"git commit -m "Updated sales summary and added email updates feature"
     - Items Sold List: \n${formattedItemsList}
   `
 
