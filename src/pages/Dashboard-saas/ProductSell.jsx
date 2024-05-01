@@ -51,55 +51,63 @@ const ProductSell = () => {
    
     const componentRef = useRef()
     const stores = [
-     {
-      id:1,
-       store: 'SQUARE ONE',
-       mall: 'Square One,',
-       address: '100 City Centre Dr,',
-       phone: '(905) 275-5911',
-       city: 'Mississauga, ON L5B 2C9',
-     },
-     {
-      id:5,
-       store: 'SQUARE ONE CART',
-       mall: 'Square One,',
-       address: '100 City Centre Dr,',
-       phone: '(905) 275-5911',
-       city: 'Mississauga, ON L5B 2C9',
-     },
-     {
-      id:2,
-       store: 'BCC UL',
-       mall: 'Bramalea City Center (Upper Level), ',
-       address: '25 Peel Centre Dr,',
-       phone: '(905)306-8444',
-       city: 'Brampton, ON L6T 3R5',
-     },
-     {
-      id:3,
-       store: 'BCC LL',
-       mall: 'Bramalea City Center (Lower Level), ',
-       address: '25 Peel Centre Dr,',
-       phone: '(905)230-8200',
-       city: 'Brampton, ON L6T 3R5',
-     },
-     {
-      id:4,
-       store: 'EMTC',
-       mall: 'Erin Mills Town Centre, ',
-       address: '5100 Erin Mills Pkwy,',
-       phone: '(905)997-0700',
-       city: 'Mississauga, ON L5M 4Z5',
-     },
-     {
-      id:6,
-       store: 'EMTC CART',
-       mall: 'Erin Mills Town Centre, ',
-       address: '5100 Erin Mills Pkwy,',
-       phone: '(905)997-0700',
-       city: 'Mississauga, ON L5M 4Z5',
-     },
-   ]
+      {
+        id: 1,
+        store: 'SQUARE ONE',
+        mall: 'Square One,',
+        address: '100 City Centre Dr,',
+        phone: '(905) 275-5911',
+        city: 'Mississauga, ON L5B 2C9',
+      },
+      {
+        id: 5,
+        store: 'SQUARE ONE CART',
+        mall: 'Square One,',
+        address: '100 City Centre Dr,',
+        phone: '(905) 275-5911',
+        city: 'Mississauga, ON L5B 2C9',
+      },
+      {
+        id: 2,
+        store: 'BCC UL',
+        mall: 'Bramalea City Center (Upper Level), ',
+        address: '25 Peel Centre Dr,',
+        phone: '(905)306-8444',
+        city: 'Brampton, ON L6T 3R5',
+      },
+      {
+        id: 3,
+        store: 'BCC LL',
+        mall: 'Bramalea City Center (Lower Level), ',
+        address: '25 Peel Centre Dr,',
+        phone: '(905)230-8200',
+        city: 'Brampton, ON L6T 3R5',
+      },
+      {
+        id: 4,
+        store: 'EMTC',
+        mall: 'Erin Mills Town Centre, ',
+        address: '5100 Erin Mills Pkwy,',
+        phone: '(905)997-0700',
+        city: 'Mississauga, ON L5M 4Z5',
+      },
+      {
+        id: 5,
+        store: 'EMTC CART',
+        mall: 'Erin Mills Town Centre, ',
+        address: '5100 Erin Mills Pkwy,',
+        phone: '(905)997-0700',
+        city: 'Mississauga, ON L5M 4Z5',
+      },
+      {
+        id: 6,
+        store: 'TECUMSEH',
+        mall: 'TECUMSEH, ',
+        address: '7654 TECUMSEH RD,',
+        phone: '(519)251-8868',
+        city: 'WINDSOR, N8T 1E9',
+      },
+    ]
       useEffect(()=> {
         setProdId(id)
       ,[id]})
@@ -191,6 +199,7 @@ const ProductSell = () => {
          updatedAt: new Date(),
          soldRemarks: remark,
          updatedBy: empName,
+         upadtedDate: moment().format('DD-MM-YYYY') 
        }
        console.log(updatedData)
        dispatch(onUpdateItem(updatedData))

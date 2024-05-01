@@ -102,17 +102,41 @@ const Login = (props) => {
                         >
                           <div className='mb-3'>
                             <Label className='form-label'>Username</Label>
-                            <select name="email" value={validation.values.email} className="form-select" onChange={validation.handleChange}>
-                              <option value="bccll@wirelessplus.com">BCC LL</option>
-                              <option value="bccul@wirelessplus.com">BCC UL</option>
-                              <option value="emtc@wirelessplus.com">EMTC</option>
-                              <option value="emtccart@wirelessplus.com">EMTC CART</option>
-                              <option value="squareone@wirelessplus.com">SQUARE ONE</option>
-                              <option value="tp1@wirelessplus.com">TP1</option>
-                              <option value="amin@wirelessplus.com">AMIN</option>
-                              <option value="sohil@wirelessplus.com">SOHIL</option>
-                              <option value="admin@wirelessplus.com">ADMIN</option>
-                          </select>
+                            <select
+                              name='email'
+                              value={validation.values.email}
+                              className='form-select'
+                              onChange={validation.handleChange}
+                            >
+                              <option value='bccll@wirelessplus.com'>
+                                BCC LL
+                              </option>
+                              <option value='bccul@wirelessplus.com'>
+                                BCC UL
+                              </option>
+                              <option value='emtc@wirelessplus.com'>
+                                EMTC
+                              </option>
+                              <option value='emtccart@wirelessplus.com'>
+                                EMTC CART
+                              </option>
+                              <option value='squareone@wirelessplus.com'>
+                                SQUARE ONE
+                              </option>
+                              <option value='tp1@wirelessplus.com'>TP1</option>
+                              <option value='tecumseh@wirelessplus.com'>
+                                TECUMSEH
+                              </option>
+                              <option value='amin@wirelessplus.com'>
+                                AMIN
+                              </option>
+                              <option value='sohil@wirelessplus.com'>
+                                SOHIL
+                              </option>
+                              <option value='admin@wirelessplus.com'>
+                                ADMIN
+                              </option>
+                            </select>
                           </div>
 
                           <div className='mb-3'>
@@ -124,26 +148,39 @@ const Login = (props) => {
                                 Forgot password?
                               </Link>
                             </div>
-                            <div className="mb-3">
-                        <Label className="form-label">Password</Label>
-                        <div className="input-group auth-pass-inputgroup">
-                          <Input
-                            name="password"
-                            value={validation.values.password || ""}
-                            type={show ? "text" : "password"}
-                            placeholder="Enter Password"
-                            onChange={validation.handleChange}
-                            onBlur={validation.handleBlur}
-                            invalid={validation.touched.password && validation.errors.password ? true : undefined}
-
-                          />
-                          <button onClick={() => setShow(!show)} className="btn btn-light " type="button" id="password-addon">
-                            <i className="mdi mdi-eye-outline"></i></button>
-                        </div>
-                        {validation.touched.password && validation.errors.password ? (
-                          <FormFeedback type="invalid">{validation.errors.password}</FormFeedback>
-                        ) : null}
-                      </div>
+                            <div className='mb-3'>
+                              <Label className='form-label'>Password</Label>
+                              <div className='input-group auth-pass-inputgroup'>
+                                <Input
+                                  name='password'
+                                  value={validation.values.password || ''}
+                                  type={show ? 'text' : 'password'}
+                                  placeholder='Enter Password'
+                                  onChange={validation.handleChange}
+                                  onBlur={validation.handleBlur}
+                                  invalid={
+                                    validation.touched.password &&
+                                    validation.errors.password
+                                      ? true
+                                      : undefined
+                                  }
+                                />
+                                <button
+                                  onClick={() => setShow(!show)}
+                                  className='btn btn-light '
+                                  type='button'
+                                  id='password-addon'
+                                >
+                                  <i className='mdi mdi-eye-outline'></i>
+                                </button>
+                              </div>
+                              {validation.touched.password &&
+                              validation.errors.password ? (
+                                <FormFeedback type='invalid'>
+                                  {validation.errors.password}
+                                </FormFeedback>
+                              ) : null}
+                            </div>
                           </div>
 
                           <div className='form-check'>

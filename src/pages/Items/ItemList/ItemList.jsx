@@ -27,7 +27,7 @@ import {
   Button,
 } from 'reactstrap'
 import TableContainer from "../../../components/Common/TableContainer";
-import ProductForm from './ProductForm'
+import ProductForm from './ProductAdd'
 import {
   Store,
   Brand,
@@ -45,24 +45,26 @@ import {
 import { connect } from 'react-redux'
 
 const initialProductState = {
-  id: '',
-  store: '',
-  brand: '',
   category: 'MOBILES',
+  brand: 'APPLE',
   model: '',
+  condition: '',
   color: '',
-  storage: '16 GB',
+  storage: '',
+  battery: '',
   price: '',
   sellingPrice: '',
-  imei: '',
-  battery: '',
-  status: 'IN STOCK',
-  condition: 'NEW',
   supplier: '',
   contact: '',
+  remarks: '',
 };
+import { collection, query, where, getDocs, doc, updateDoc } from 'firebase/firestore';
+import { db } from '../../../helpers/firebase';
+import ProductAdd from './ProductAdd'
 
-const ItemList = ({user,items}) => {
+const ItemList = ({user}) => {
+  const [modal_standard, setmodal_standard] = useState(false);
+  const [items, setItems] = useState([])
   const [store, setStore] = useState('')
   const [instockSold, setInstockSold] = useState('IN STOCK')
   const [selectedValue, setSelectedValue] = useState('IN STOCK')
@@ -71,17 +73,28 @@ const ItemList = ({user,items}) => {
   const [deleteModal, setDeleteModal] = useState(false)
   const dispatch = useDispatch()
 // const items = useSelector((state) => state.ItemReducer.items)/
-  useEffect(() => {
-    setStore(user.store)
-    dispatch(onGetItems(user.store))
-  }, [user])
-  // const user = useSelector((state) => state.users.user)
-
   // useEffect(() => {
-  //   if (user){
-  //     console.log('testing rendering')
+  //   if(user){
+  //   setStore(user.store)
+  //   dispatch(onGetItems(user.store))
   //   }
   // }, [user])
+  const fetchProducts = async ( ) => {
+    const prodQuery = query(prodCollectionRef,  where('status', '==',selectedValue ), where('store', '==', user.store));
+    const data = await getDocs(prodQuery);
+    const prod = data.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+    setItems(prod)
+}
+
+  const prodCollectionRef = collection(db, 'products');
+  useEffect(() => {
+    setStore(user.store)
+         fetchProducts()
+ }, [user, selectedValue]);
+
+  useEffect(() => {
+   setStore(user.store)
+ }, [user])
   const memoizedItems = useMemo(() => getUpdatedItems(items), [items]);
 
   const { newItemList, outOfStockItems } = memoizedItems;
@@ -90,22 +103,26 @@ const ItemList = ({user,items}) => {
     setProduct(item)
   }, [])
 
-  const handleDeleteItem = useCallback(() => {
-    if (product) {
-      dispatch(onDeleteItem(product))
-      setDeleteModal(false)
-    }
-  }, [product, dispatch])
-
   const handleStatusChange = useCallback((e) => {
     console.log(e.target.value)
     setSelectedValue(e.target.value)
   }, [])
 
-  const onClickDelete = useCallback((item) => {
-    setProduct(item)
-    setDeleteModal(true)
-  }, [])
+  const handleDeleteItem = () => {
+    if (product) {
+      dispatch(onDeleteItem(product)) // Perform deletion
+      setDeleteModal(false) // Close modal
+    }
+    alert('Product Deleted')
+    setTimeout(() => {
+      fetchProducts()
+    }, 1000)
+  }
+
+  const onClickDelete = item => {
+    setProduct(item) // Set the selected item
+    setDeleteModal(true) // Show the delete modal
+  }
 
   const columns = useMemo(() => [
     {
@@ -228,8 +245,9 @@ const ItemList = ({user,items}) => {
                 to={`/product-edit/${cellProps.row.original.id}`}
                 className='btn btn-sm btn-soft-info'
               >
-                <i className='mdi mdi-playlist-edit' id='edittooltip' />
+                <i className='mdi mdi-pencil' id='edittooltip' />
               </Link>
+
             </li>
 
             <li>
@@ -237,8 +255,8 @@ const ItemList = ({user,items}) => {
                 to='#'
                 className='btn btn-sm btn-soft-danger'
                 onClick={() => {
-                  const ItemData = cellProps.row.original
-                  onClickDelete(ItemData)
+                  // setProduct(cellProps.row.original)
+                  onClickDelete(cellProps.row.original)
                 }}
               >
                 <i className='mdi mdi-delete-outline' id='deletetooltip' />
@@ -257,9 +275,12 @@ const ItemList = ({user,items}) => {
 
   return (
     <div className='page-content'>
+      <ProductAdd modal_standard ={modal_standard} setmodal_standard ={setmodal_standard}
+       fetchProducts = {fetchProducts} setProduct={setProduct} product ={product}/>
+
       <DeleteModal
         show={deleteModal}
-        onDeleteClick={handleDeleteItem}
+        onDeleteClick={handleDeleteItem} // Call handleDeleteItem only after confirmation
         onCloseClick={() => setDeleteModal(false)}
       />
       <div className='container-fluid'>
@@ -287,12 +308,12 @@ const ItemList = ({user,items}) => {
                   >
                     <i className='mdi mdi-refresh'></i>
                   </Button>
-                  <Link
+                   <Link
                     to='/product-form'
                     className='btn btn-primary me-1'
                   >
                     Add New Item
-                  </Link>
+                  </Link> 
                 </div>
               </Col>
             </Row>

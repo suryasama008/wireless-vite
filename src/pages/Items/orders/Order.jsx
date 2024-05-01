@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState,useMemo, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
-import { Row, Col, Card, CardBody, CardTitle , Button} from 'reactstrap';
+import { Row, Col, Card, CardBody, CardTitle , Button,  Input, InputGroup,} from 'reactstrap';
 import Breadcrumbs from '../../../components/Common/Breadcrumb';
 import { db } from '../../../helpers/firebase';
 import { collection, getDocs, where, query, doc, updateDoc, addDoc } from 'firebase/firestore';
@@ -16,13 +16,14 @@ import {
   } from '/src/store/actions'
 const Order = () => {
     const [cartItems, setCartItems] = useState([]);
-    const [selectedModel, setSelectedModel] = useState('');
+    const [selectedModel, setSelectedModel] = useState('PHONE 14');
     const [cases, setCases] = useState([])
-    const [model, setModel] = useState('');
+    const [model, setModel] = useState('IPHONE 14');
     const [orders, setOrders] = useState([])
     const [modelOptions, setModelOptions] = useState([]);
     const [quantities, setQuantities] = useState({});
   const [selectedDate, setSelectedDate] = useState(moment().format('DD-MM-YYYY'));
+  const [searchTerm, setSearchTerm] = useState('');
 
     const dispatch = useDispatch()
     const user = useSelector((state) => state.users.user);
@@ -196,6 +197,21 @@ const handlePlaceOrder = async () => {
 };
 
 
+const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value.toLowerCase());
+  };
+
+  const filteredModelOptions = useMemo(() => {
+    if (!searchTerm) return modelOptions;
+    return modelOptions.map(brand => ({
+      ...brand,
+      options: brand.options.filter(option => option.value.toLowerCase().includes(searchTerm))
+    })).filter(brand => brand.options.length > 0);
+  }, [modelOptions, searchTerm]);
+
+  const handleClearSearch = () => {
+    setSearchTerm('');
+  };
 
     return (
         <div className='page-content'>
@@ -211,18 +227,30 @@ const handlePlaceOrder = async () => {
       <h5 className='mb-0'>Models</h5>
     </CardTitle>
     <CardBody>
-        <div style={{ maxHeight: '70vh',overflowY: 'auto', 
-            scrollbarWidth: 'none', cursor: "pointer" }}>{modelOptions.map((brand, brandIndex) => (
-        <div key={brandIndex}>
-          <h4>{brand.label}</h4>
-          {brand.options.map((option, optionIndex) => (
-            <div key={optionIndex} onClick={() => handleModelClick(option.value)} className='p-2' style={{ borderBottom: "1px solid black", 
-            backgroundColor: selectedModel === option.value ? '#556ee5' : 'transparent', color: selectedModel === option.value ? 'white' : 'black' }}>
-                {option.value}
-            </div>
-          ))}
-        </div>
-        ))}
+    <InputGroup>
+                <Input
+                  type="text"
+                  className="form-control"
+                  placeholder="Search Model..."
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                />
+                {searchTerm && (
+                    <Button color="primary" onClick={handleClearSearch}>X</Button>
+                )}
+              </InputGroup>
+        <div style={{ maxHeight: '100vh',overflowY: 'auto', 
+                    scrollbarWidth: 'none', cursor: "pointer" }} className='mt-4'>
+               {filteredModelOptions.map((brand, brandIndex) => (
+                  <div key={brandIndex}>
+                    <h4>{brand.label}</h4>
+                    {brand.options.map((option, optionIndex) => (
+                      <div key={optionIndex} onClick={() => handleModelClick(option.value)} className='p-2' style={{ borderBottom: "1px solid #f9f9f9", backgroundColor: selectedModel === option.value ? '#556ee5' : 'transparent', color: selectedModel === option.value ? 'white' : 'black' }}>
+                        {option.value}
+                      </div>
+                    ))}
+                  </div>
+                ))}
         </div>
             </CardBody>
        </Card>

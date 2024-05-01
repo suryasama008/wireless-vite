@@ -40,7 +40,7 @@
     "echarts": "^4.9.0",
     "echarts-for-react": "^3.0.2",
     "eslint": "^8.22.0",
-    "firebase": "^9.9.3",
+    "firebase": "^9.23.0",
     "formik": "^2.2.9",
     "google-maps-react": "^2.0.6",
     "html2canvas": "^1.4.1",

@@ -119,19 +119,6 @@ const SidebarContent = props => {
               </Link>
             </li>
           
-            <li className="menu-title">{props.t("Orders")}</li>
-            <li>
-              <Link to='/orders'>
-                <i className='bx bx-select-multiple'></i>
-                <span>{props.t('Place Order')}</span>
-              </Link>
-            </li>
-            <li>
-              <Link to='/orders-list'>
-                <i className='bx bx-align-middle'></i>
-                <span>{props.t('Show Orders')}</span>
-              </Link>
-            </li>
             <li className="menu-title">{props.t("Store")}</li>
             <li>
               <Link to='/teal' className=''>

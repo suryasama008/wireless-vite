@@ -40,11 +40,13 @@ const Teal = () => {
       phones: '',
       repairs: '',
       expenses: '',
-      expensesList: '',},
+      expensesList: '',
+      repairsList:'',
+    },
     todaysItems: [],
     employees: []
   });
-
+console.log(data.repairsList)
   const user = useSelector((state) => state.users.user);
 
   const fetchData = useCallback(async (date = moment().format('DD-MM-YYYY')) => {
@@ -93,6 +95,7 @@ const Teal = () => {
             repairs: '',
             expenses: '',
             expensesList: '',
+            repairsList: ''
           }
         }));
       }
@@ -119,17 +122,21 @@ const Teal = () => {
     const emailData = {
       service_id: 'service_n40uhpq',
       template_id: 'template_tofrxi8',
-      user_id: 'u9HKukohg-tvqGoxg',
+      user_id: '5sfIq1TVWP4_TTBTJ',
       template_params: emailParams,
-      // accessToken: 'YOUR_PRIVATE_KEY', // Uncomment if you need to use the Private Key
-    };
+      // accessToken: 'L6VH2h1HOUlaq5NEji8Jy', // Uncomment if you need to use the Private Key
+    }
   
     try {
-      const response = await axios.post('https://api.emailjs.com/api/v1.0/email/send', JSON.stringify(emailData), {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await axios.post(
+        'https://api.emailjs.com/api/v1.0/email/send',
+        JSON.stringify(emailData),
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
       if (response.status === 200) {
         console.log('Email sent successfully');
       }
@@ -206,6 +213,7 @@ const Teal = () => {
       .split('\n')
       .map((line) => `          ${line}`)
       .join('\n');
+ 
       const formattedItemsList = data.todaysItems.map((item) => 
       `          CAD $ ${item.soldPrice}  -  ${item.model} (${item.condition})  -  ${item.color}`
     ).join('\n');
@@ -213,22 +221,24 @@ const Teal = () => {
       setToast(true); // Show the toast
   
       // Format the sales summary message
-      const formattedSalesSummary = `
-                  ${user.store}
-                ${selectedDate}
-              Sales Summary
-        - Cash: ${data.salesSummary.cash}
-        - Card: ${data.salesSummary.card}
-        - Total: ${parseFloat(data.salesSummary.cash) + parseFloat(data.salesSummary.card)}
-        - Items Sold: ${data.salesSummary.itemsSold}
-        - Phones: ${data.salesSummary.phones}
-        - Repairs: ${data.salesSummary.repairs}
-        - Expenses: ${data.salesSummary.expenses}
-        - Expenses List: \n ${formattedExpensesList}
-        - Items Sold List: \n${formattedItemsList}
-      `;
+    const formattedSalesSummary = `
+              ${user.store}
+            ${selectedDate}
+          Sales Summary
+    - Cash: ${parseFloat(data.salesSummary.cash).toFixed(2)}
+    - Card: ${parseFloat(data.salesSummary.card).toFixed(2)}
+    - Total: ${(
+      parseFloat(data.salesSummary.cash) + parseFloat(data.salesSummary.card)
+    ).toFixed(2)}
+    - Items Sold: ${data.salesSummary.itemsSold}
+    - Phones: ${data.salesSummary.phones}
+    - Repairs: ${data.salesSummary.repairs}
+    - Expenses: ${parseFloat(data.salesSummary.expenses).toFixed(2)}
+    - Remarks: \n ${formattedExpensesList}
+    - Items Sold List: \n${formattedItemsList}
+  `
 
-      console.log(formattedSalesSummary)
+    console.log(formattedSalesSummary)
 
       const emailParams = {
         // Define your template params here
@@ -237,6 +247,7 @@ const Teal = () => {
         date: selectedDate,
         message: formattedSalesSummary,
       };
+      console.log(emailParams)
       await handleSendEmail(emailParams);
       handleSendEmailToggle()
   
